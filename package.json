@@ -9,8 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "aphelionz",
+  "license": "MIT",
   "dependencies": {
     "expose-gc": "^1.0.0",
     "yargs": "^13.2.4"
