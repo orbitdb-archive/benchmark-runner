@@ -16,7 +16,9 @@
     "yargs": "^13.2.4"
   },
   "localMaintainers": [
-    "hajamark <mark@haja.io>"
+    "hajamark <mark@haja.io>",
+    "shamb0t <shams@haja.io>",
+    "richardlitt <richard.littauer@gmail.com>"
   ],
   "keywords": [
     "orbitdb",
