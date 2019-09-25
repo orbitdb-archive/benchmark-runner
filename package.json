@@ -14,5 +14,19 @@
   "dependencies": {
     "expose-gc": "^1.0.0",
     "yargs": "^13.2.4"
-  }
+  },
+  "localMaintainers": [
+    "hajamark <mark@haja.io>"
+  ],
+  "keywords": [
+    "orbitdb",
+    "orbit",
+    "benchmark",
+    "runner",
+    "decentralized",
+    "database"
+  ],
+  "homepage": "https://github.com/orbitdb/benchmark-runner#readme",
+  "bugs": "https://github.com/orbitdb/benchmark-runner/issues",
+  "repository": "github:orbitdb/benchmark-runner"
 }
