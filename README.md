@@ -12,6 +12,12 @@
 
 TBD
 
+## Testing
+
+Added Mocha as testing framework and SinonJS for stubs and mocks. To run tests:
+
+`npm run test`
+
 ## Contributing
 
 If you think this could be better, please [open an issue](https://github.com/orbitdb/benchmark-runner/issues/new)!
