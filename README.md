@@ -14,7 +14,7 @@ TBD
 
 ## Testing
 
-Added Mocha as testing framework and SinonJS for stubs and mocks. To run tests:
+Mocha is used as the testing framework, SinonJS for stubs and mocks and ChaiJS for assertions. To run tests:
 
 `npm run test`
 
