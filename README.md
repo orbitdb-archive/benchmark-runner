@@ -12,6 +12,12 @@
 
 TBD
 
+## Testing
+
+Mocha is used as the testing framework, SinonJS for stubs and mocks and ChaiJS for assertions. To run tests:
+
+`npm run test`
+
 ## Contributing
 
 If you think this could be better, please [open an issue](https://github.com/orbitdb/benchmark-runner/issues/new)!

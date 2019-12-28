@@ -7,7 +7,7 @@
     "benchmark-runner": "./cli.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --expose-gc"
   },
   "author": "aphelionz",
   "license": "MIT",
@@ -31,5 +31,10 @@
   ],
   "homepage": "https://github.com/orbitdb/benchmark-runner#readme",
   "bugs": "https://github.com/orbitdb/benchmark-runner/issues",
-  "repository": "github:orbitdb/benchmark-runner"
+  "repository": "github:orbitdb/benchmark-runner",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.1",
+    "sinon": "^7.5.0"
+  }
 }
