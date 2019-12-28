@@ -101,14 +101,20 @@ describe('CLI Test', () => {
             expect(yargsResult.g).to.equal('append-baseline');
         });
         
-        it('should show error msg when arg not passed to grep', async() => {
+        it('should show help msg when arg not passed to grep', async() => {
             const yargsCmd = yargs.command(cli);
             const output = await new Promise((resolve) => {
                 yargsCmd.parse("cli -g", (err, argv, output) => {
                   resolve(output);
                 })
             });
-            expect(output).to.contain("Not enough arguments following: g");
+            expect(output).to.contain("baseline");
+            expect(output).to.contain("report");
+            expect(output).to.contain("list");
+            expect(output).to.contain("grep");
+            expect(output).to.contain("stressLimit");
+            expect(output).to.contain("baselineLimit");
+            expect(output).to.contain("logLimit");
         });
     });
 
@@ -121,14 +127,20 @@ describe('CLI Test', () => {
             expect(yargsResult.stressLimit).to.equal(300);
         });
         
-        it('should show error msg when arg not passed to stressLimit', async() => {
+        it('should show help msg when arg not passed to stressLimit', async() => {
             const yargsCmd = yargs.command(cli);
             const output = await new Promise((resolve) => {
                 yargsCmd.parse("cli --stressLimit", (err, argv, output) => {
                   resolve(output);
                 })
             });
-            expect(output).to.contain("Not enough arguments following: stressLimit");
+            expect(output).to.contain("baseline");
+            expect(output).to.contain("report");
+            expect(output).to.contain("list");
+            expect(output).to.contain("grep");
+            expect(output).to.contain("stressLimit");
+            expect(output).to.contain("baselineLimit");
+            expect(output).to.contain("logLimit");
         });
     });
 
@@ -141,14 +153,20 @@ describe('CLI Test', () => {
             expect(yargsResult.baselineLimit).to.equal(1000);
         });
         
-        it('should show error msg when arg not passed to baselineLimit', async() => {
+        it('should show help msg when arg not passed to baselineLimit', async() => {
             const yargsCmd = yargs.command(cli);
             const output = await new Promise((resolve) => {
                 yargsCmd.parse("cli --baselineLimit", (err, argv, output) => {
                   resolve(output);
                 })
             });
-            expect(output).to.contain("Not enough arguments following: baselineLimit");
+            expect(output).to.contain("baseline");
+            expect(output).to.contain("report");
+            expect(output).to.contain("list");
+            expect(output).to.contain("grep");
+            expect(output).to.contain("stressLimit");
+            expect(output).to.contain("baselineLimit");
+            expect(output).to.contain("logLimit");
         });
     });
 
@@ -161,14 +179,20 @@ describe('CLI Test', () => {
             expect(yargsResult.logLimit).to.equal(1000);
         });
         
-        it('should show error msg when arg not passed to logLimit', async() => {
+        it('should show help msg when arg not passed to logLimit', async() => {
             const yargsCmd = yargs.command(cli);
             const output = await new Promise((resolve) => {
                 yargsCmd.parse("cli --logLimit", (err, argv, output) => {
                   resolve(output);
                 })
             });
-            expect(output).to.contain("Not enough arguments following: logLimit");
+            expect(output).to.contain("baseline");
+            expect(output).to.contain("report");
+            expect(output).to.contain("list");
+            expect(output).to.contain("grep");
+            expect(output).to.contain("stressLimit");
+            expect(output).to.contain("baselineLimit");
+            expect(output).to.contain("logLimit");
         });
     });
 
