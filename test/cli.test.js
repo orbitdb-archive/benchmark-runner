@@ -23,7 +23,7 @@ describe('CLI Test', () => {
     
 
     describe('baseline', () => {
-        it('should parse basline properly', () => {
+        it('should parse basline value', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli --baseline', {}
@@ -32,7 +32,7 @@ describe('CLI Test', () => {
             expect(yargsResult.b).to.be.true;
         });
 
-        it('should parse basline properly when using alias', () => {
+        it('should parse basline value when using alias', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli -b', {}
@@ -43,7 +43,7 @@ describe('CLI Test', () => {
     }); 
 
     describe('report', () => {
-        it('should parse report properly', () => {
+        it('should parse report value', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli --report', {}
@@ -52,7 +52,7 @@ describe('CLI Test', () => {
             expect(yargsResult.r).to.be.true;
         });
 
-        it('should parse report properly when using alias', () => {
+        it('should parse report value when using alias', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli -r', {}
@@ -63,7 +63,7 @@ describe('CLI Test', () => {
     });  
     
     describe('list', () => {
-        it('should parse list properly', () => {
+        it('should parse list value', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli --list', {}
@@ -72,7 +72,7 @@ describe('CLI Test', () => {
             expect(yargsResult.l).to.be.true;
         });
 
-        it('should parse report properly when using alias', () => {
+        it('should parse report value when using alias', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli -l', {}
@@ -83,7 +83,7 @@ describe('CLI Test', () => {
     });
 
     describe('grep', () => {
-        it('should parse grep properly', () => {
+        it('should parse grep value', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli --grep append-baseline', {}
@@ -92,7 +92,7 @@ describe('CLI Test', () => {
             expect(yargsResult.g).to.equal('append-baseline');
         });
 
-        it('should parse grep properly when using alias', () => {
+        it('should parse grep value when using alias', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli -g append-baseline', {}
@@ -113,7 +113,7 @@ describe('CLI Test', () => {
     });
 
     describe('stressLimit', () => {
-        it('should parse stressLimit properly', () => {
+        it('should parse stressLimit value', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli --stressLimit 300', {}
@@ -133,7 +133,7 @@ describe('CLI Test', () => {
     });
 
     describe('baselineLimit', () => {
-        it('should parse baselineLimit properly', () => {
+        it('should parse baselineLimit value', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli --baselineLimit 1000', {}
@@ -153,7 +153,7 @@ describe('CLI Test', () => {
     });
 
     describe('logLimit', () => {
-        it('should parse logLimit properly', () => {
+        it('should parse logLimit value', () => {
             const yargsCmd = yargs.command(cli);
             const yargsResult = yargsCmd.parse(
                 'cli --logLimit 1000', {}
