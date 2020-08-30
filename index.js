@@ -21,8 +21,8 @@ const start = async (benchmarks, argv) => {
   const baselineOnly = argv.baseline
   const runnerStartTime = process.hrtime()
 
-  process.stdout.write(`Running ${baselineOnly ? 'baseline ' : ''}benchmarks matching: ${grep}`)
-  process.stdout.write('\n')
+  // process.stdout.write(`Running ${baselineOnly ? 'baseline ' : ''}benchmarks matching: ${grep}`)
+  // process.stdout.write('\n')
 
   if (!global.gc) {
     console.warn('start with --expose-gc')
@@ -53,7 +53,7 @@ const start = async (benchmarks, argv) => {
     const runnerElapsed = getElapsed(process.hrtime(runnerStartTime))
     let output = `\rCompleted ${results.length} benchmark${results.length > 1 ? 's' : ''}`
     output += ` in ${(runnerElapsed / 1000000000).toFixed(2)} seconds`
-    process.stdout.write(output)
+    // process.stdout.write(output)
 
     if (argv.report) {
       report(results)
@@ -82,7 +82,7 @@ const runOne = async (benchmark) => {
     before: process.memoryUsage()
   }
 
-  process.stdout.write(`\r${benchmark.name} / Preparing`)
+  // process.stdout.write(`\r${benchmark.name} / Preparing`)
   const params = await benchmark.prepare()
 
   process.stdout.clearLine()
@@ -91,7 +91,7 @@ const runOne = async (benchmark) => {
     const elapsed = getElapsed(process.hrtime(startTime))
     const totalSeconds = (elapsed / 1000000000).toFixed(4)
     const opsPerSec = (stats.count / totalSeconds).toFixed(4)
-    process.stdout.write(`\r${benchmark.name} / Cycles: ${stats.count} (${opsPerSec.toString()} ops/sec)`)
+    // process.stdout.write(`\r${benchmark.name} / Cycles: ${stats.count} (${opsPerSec.toString()} ops/sec)`)
     await benchmark.cycle(params)
     stats.count++
   }
@@ -99,7 +99,7 @@ const runOne = async (benchmark) => {
   const elapsed = getElapsed(process.hrtime(startTime))
   memory.after = process.memoryUsage()
 
-  process.stdout.write(`\r${benchmark.name} / Finishing`)
+  // process.stdout.write(`\r${benchmark.name} / Finishing`)
   await benchmark.teardown(params)
   process.stdout.clearLine()
 
