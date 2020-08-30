@@ -10,7 +10,7 @@ const padStr = (str, max) => {
 }
 
 const reporter = (results) => {
-  let reports = [{
+  const reports = [{
     name: 'Benchmark Name',
     ops: 'Ops / ms',
     totalMs: 'Total ms',

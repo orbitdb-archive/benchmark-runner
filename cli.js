@@ -66,8 +66,6 @@ const stressLimit = argv.stressLimit || 300
 const baselineLimit = argv.baselineLimit || 1000
 const logLimit = argv.logLimit || 10000
 
-console.log(process.cwd())
-
 const benchmarks = require(process.cwd() + '/benchmarks')
 const report = require('./report')
 
@@ -95,7 +93,7 @@ const rimraf = (path) => {
 }
 
 const runOne = async (benchmark) => {
-  let stats = {
+  const stats = {
     count: 0
   }
 
@@ -103,7 +101,7 @@ const runOne = async (benchmark) => {
     global.gc()
   }
 
-  let memory = {
+  const memory = {
     before: process.memoryUsage()
   }
 
@@ -139,7 +137,7 @@ const runOne = async (benchmark) => {
 }
 
 const start = async () => {
-  let results = []
+  const results = []
   const baselineOnly = argv.baseline
   const runnerStartTime = process.hrtime()
 
