@@ -11,6 +11,7 @@ const DEFAULT_GREP = /.*/
 const start = async (benchmarks, argv) => {
   if (argv.list) {
     benchmarks.forEach(b => console.log(b.name))
+    return
   }
 
   const grep = argv.grep ? new RegExp(argv.grep) : DEFAULT_GREP
