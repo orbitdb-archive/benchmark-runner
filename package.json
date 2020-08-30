@@ -7,7 +7,7 @@
     "benchmark-runner": "./cli.js"
   },
   "scripts": {
-    "test": "mocha --expose-gc"
+    "test": "nyc mocha --expose-gc"
   },
   "author": "aphelionz",
   "license": "MIT",
@@ -35,6 +35,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^8.1.3",
+    "nyc": "^15.1.0",
     "sinon": "^9.0.3"
   }
 }
