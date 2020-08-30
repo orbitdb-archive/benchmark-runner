@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "expose-gc": "^1.0.0",
-    "yargs": "^13.2.4"
+    "yargs": "^15.4.1"
   },
   "localMaintainers": [
     "hajamark <mark@haja.io>",
@@ -34,7 +34,7 @@
   "repository": "github:orbitdb/benchmark-runner",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.1",
-    "sinon": "^7.5.0"
+    "mocha": "^8.1.3",
+    "sinon": "^9.0.3"
   }
 }
