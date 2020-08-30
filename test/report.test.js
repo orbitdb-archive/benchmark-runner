@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect
 const sinon = require('sinon')
-const reporter = require('../report')
+const reporter = require('../src/report')
 
 describe('ReporterTest', () => {
   it('should print empty line when no data passed', () => {
