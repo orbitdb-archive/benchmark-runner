@@ -1,6 +1,6 @@
 {
   "name": "orbit-db-benchmark-runner",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "OrbitDB Benchmark Runner",
   "main": "index.js",
   "bin": {
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "nyc mocha --expose-gc"
   },
-  "author": "aphelionz",
+  "author": "mistakia",
   "license": "MIT",
   "dependencies": {
     "expose-gc": "^1.0.0",
