@@ -60,24 +60,8 @@ const argv = yargs
   .example('$0 -r -g values-.*-baseline', 'Run all of the values baseline benchmarks')
   .argv
 
-// const rimraf = (path) => {
-//   if (fs.existsSync(path)) {
-//     fs.readdirSync(path).forEach((file, index) => {
-//       const curPath = `${path}/${file}`
-//       if (fs.lstatSync(curPath).isDirectory()) {
-//         rimraf(curPath)
-//       } else {
-//         fs.unlinkSync(curPath)
-//       }
-//     })
-//     fs.rmdirSync(path)
-//   }
-// }
-
-
 // Was this called directly from the CLI?
 // For mocha tests - maybe we can mitigate this but for now it works
 if (require.main == module) {
   start(benchmarks, argv)
-  // rimraf('./ipfs-log-benchmarks')
 }
