@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-const gc = require('expose-gc/function')
-gc()
-
 /* global process */
 const { start } = require('./index')
 
@@ -61,7 +58,7 @@ const argv = yargs
 
 // Was this called directly from the CLI?
 // For mocha tests - maybe we can mitigate this but for now it works
-if (require.main == module) {
+if (require.main === module) {
   try {
     const benchmarks = require(process.cwd() + '/benchmarks')
     start(benchmarks, argv)

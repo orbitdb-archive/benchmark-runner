@@ -137,9 +137,7 @@ describe('CLI Test', () => {
     it('should show help msg when arg not passed to grep', async () => {
       const yargsCmd = yargs.command(cli)
       const output = await new Promise((resolve) => {
-        yargsCmd.parse('cli -g', (err, argv, output) => {
-          if (err) { }
-
+        yargsCmd.parse('cli -g', (_, argv, output) => {
           resolve(output)
         })
       })
@@ -176,9 +174,7 @@ describe('CLI Test', () => {
     it('should show help msg when arg not passed to stressLimit', async () => {
       const yargsCmd = yargs.command(cli)
       const output = await new Promise((resolve) => {
-        yargsCmd.parse('cli --stressLimit', (err, argv, output) => {
-          if (err) { }
-
+        yargsCmd.parse('cli --stressLimit', (_, argv, output) => {
           resolve(output)
         })
       })
@@ -215,9 +211,7 @@ describe('CLI Test', () => {
     it('should show help msg when arg not passed to baselineLimit', async () => {
       const yargsCmd = yargs.command(cli)
       const output = await new Promise((resolve) => {
-        yargsCmd.parse('cli --baselineLimit', (err, argv, output) => {
-          if (err) { }
-
+        yargsCmd.parse('cli --baselineLimit', (_, argv, output) => {
           resolve(output)
         })
       })
@@ -254,9 +248,7 @@ describe('CLI Test', () => {
     it('should show help msg when arg not passed to logLimit', async () => {
       const yargsCmd = yargs.command(cli)
       const output = await new Promise((resolve) => {
-        yargsCmd.parse('cli --logLimit', (err, argv, output) => {
-          if (err) { }
-
+        yargsCmd.parse('cli --logLimit', (_, argv, output) => {
           resolve(output)
         })
       })

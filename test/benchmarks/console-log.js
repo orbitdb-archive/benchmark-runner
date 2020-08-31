@@ -2,7 +2,7 @@ const base = {
   prepare: async function () {
   },
   cycle: async function () {
-    const date = new Date()
+    const date = new Date() // eslint-disable-line
   },
   teardown: async function () {
   }

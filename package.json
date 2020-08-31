@@ -7,7 +7,7 @@
     "benchmark-runner": "./src/cli.js"
   },
   "scripts": {
-    "test": "nyc mocha --expose-gc"
+    "test": "nyc mocha"
   },
   "author": "mistakia",
   "license": "MIT",
