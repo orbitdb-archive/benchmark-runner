@@ -4,7 +4,6 @@ const gc = require('expose-gc/function')
 gc()
 
 /* global process */
-const benchmarks = require(process.cwd() + '/benchmarks')
 const { start } = require('./index')
 
 const yargs = require('yargs')
@@ -63,5 +62,10 @@ const argv = yargs
 // Was this called directly from the CLI?
 // For mocha tests - maybe we can mitigate this but for now it works
 if (require.main == module) {
-  start(benchmarks, argv)
+  try {
+    const benchmarks = require(process.cwd() + '/benchmarks')
+    start(benchmarks, argv)
+  } catch (e) {
+    throw new Error(e.message)
+  }
 }
