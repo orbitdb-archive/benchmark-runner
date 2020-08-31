@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-expressions */
 
 const yargs = require('yargs')
-const cli = require('../cli')
+const cli = require('../src/cli')
 const expect = require('chai').expect
-const { start } = require('../index')
+const { start } = require('../src/index')
 
-const benchmarks = require(process.cwd() + '/benchmarks')
+const benchmarks = require(process.cwd() + '/test/benchmarks')
 
 describe('CLI Test', () => {
   it('should return help output', async () => {
