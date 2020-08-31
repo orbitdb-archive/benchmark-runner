@@ -42,7 +42,6 @@ const start = async (benchmarks, argv) => {
         continue
       }
 
-      console.log(benchmark.count)
       if (benchmark.count && benchmark.count > logLimit) {
         continue
       }
