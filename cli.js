@@ -9,7 +9,7 @@ const { start } = require('./index')
 
 const yargs = require('yargs')
 const argv = yargs
-  .usage('IPFS Log benchmark runner\n\nUsage: node --expose-gc $0 [options]')
+  .usage('OrbitDB benchmark runner\n\nUsage: node --expose-gc $0 [options]')
   .version(false)
   .help('help').alias('help', 'h')
   .options({
