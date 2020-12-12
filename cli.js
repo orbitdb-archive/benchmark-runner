@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-const gc = require('expose-gc/function')
-gc()
+require('expose-gc')
 
 /* global process */
 const os = require('os')
