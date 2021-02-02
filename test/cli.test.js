@@ -24,6 +24,8 @@ describe('CLI Test', () => {
     expect(output).to.contain('stressLimit')
     expect(output).to.contain('baselineLimit')
     expect(output).to.contain('logLimit')
+    expect(output).to.contain('save')
+    expect(output).to.contain('compare')
   })
 
   describe('baseline', () => {
@@ -270,4 +272,5 @@ describe('CLI Test', () => {
       await start(benchmarks, yargsResult)
     })
   })
+
 })
