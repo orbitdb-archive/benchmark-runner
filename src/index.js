@@ -1,5 +1,5 @@
-require('expose-gc')
-global.gc()
+'use strict'
+const gc = require('expose-gc/function')
 
 const os = require('os')
 
@@ -71,9 +71,7 @@ const runOne = async (benchmark) => {
     count: 0
   }
 
-  if (global.gc) {
-    global.gc()
-  }
+  gc()
 
   const memory = {
     before: process.memoryUsage()
