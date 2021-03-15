@@ -6,7 +6,7 @@
 
 ## Install
 
-`npm i benchmark-runner`
+`npm i orbit-db-benchmark-runner`
 
 ## Usage
 
