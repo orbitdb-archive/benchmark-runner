@@ -76,7 +76,7 @@ class Benchmarker {
 
   startRecording () {
     this._recordMetrics()
-    this._timeout = setTimeout(this.startRecording, this.interval)
+    this._timeout = setTimeout(this.startRecording.bind(this), this.interval)
   }
 
   stopRecording () {
