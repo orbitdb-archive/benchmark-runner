@@ -30,8 +30,10 @@ if (!bPathExists) throw new Error('given benchmark path does not exit')
 const bPathIsDirectory = bPathExists && fs.lstatSync(bPath).isDirectory()
 const benchmarkPaths = bPathIsDirectory
   ? execSync('ls *.benchmark.js', { cwd: bPath })
+    .toString()
     .split('\n')
     .filter(a => a)
+    .map(p => path.join(bPath, p))
   : [bPath]
 
 const server = new BenchmarkerServer({ bPaths: benchmarkPaths, rPath, port }).create()
