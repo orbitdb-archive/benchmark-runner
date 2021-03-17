@@ -7,10 +7,12 @@ class BenchmarkServer {
     this.rPath = rPath
     this.port = port
     this._server = null
+    this.onResults = () => {}
   }
 
-  create () {
+  static create () {
     this._server = http.createServer(this._httpListener.bind(this)).listen(this.port)
+    return this
   }
 
   _httpListener (req, res) {
@@ -25,11 +27,12 @@ class BenchmarkServer {
   async _handleResults (req, res) {
     let body = ''
     req.on('data', chunk => { body += chunk })
-    req.on('end', () => { res.writeHead(200); res.end() })
-    this.onResults(body)
+    req.on('end', () => {
+      this.onResults(body)
+      res.writeHead(200)
+      res.end()
+    })
   }
-
-  onResults (results) {}
 }
 
 module.exports = BenchmarkServer
