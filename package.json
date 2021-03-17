@@ -13,6 +13,7 @@
   "author": "mistakia",
   "license": "MIT",
   "dependencies": {
+    "commander": "^7.1.0",
     "expose-gc": "^1.0.0",
     "is-node": "^1.0.2",
     "whatwg-fetch": "^3.6.2",
