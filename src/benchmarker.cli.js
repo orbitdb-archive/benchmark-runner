@@ -13,16 +13,16 @@ process.on('SIGINT', function () {
 
 program
   .version(pkg.version)
-  .requiredOption('-b, --benchmark', 'benchmark/s file or folder to run')
-  .requiredOption('-r, --results', 'where to write the results file')
-  .option('-p, --port', 'benchmark http service port', 7777)
+  .requiredOption('-b, --benchmark <path>', 'benchmark/s file or folder to run')
+  .requiredOption('-r, --results <path>', 'where to write the results file')
+  .option('-p, --port <port number>', 'benchmark http service port', 7777)
   // .option('-b, --browser', 'run the benchmarks in the browser', false)
 
 program.parse()
 let { benchmark: bPath, results: rPath, port } = program.opts()
 bPath = path.resolve(bPath)
 rPath = path.resolve(rPath)
-const url = `http://127.0.0.1:${program.port}`
+const url = `http://127.0.0.1:${port}`
 
 const bPathExists = fs.existsSync(bPath)
 if (!bPathExists) throw new Error('given benchmark path does not exit')
