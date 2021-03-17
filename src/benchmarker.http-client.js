@@ -1,7 +1,7 @@
 'use strict'
 const isNode = require('is-node')
 const getFetch = () => isNode
-  ? require('whatwg-fetch')
+  ? require('node-fetch')
   : window.fetch
 
 const timeMetric = {
