@@ -4,7 +4,8 @@
   "description": "OrbitDB Benchmark Runner",
   "main": "./src/index.js",
   "bin": {
-    "benchmark-runner": "./src/cli.js"
+    "benchmark-runner": "./src/cli.js",
+    "benchmarker": "./src/benchmarker.cli.js"
   },
   "scripts": {
     "test": "nyc mocha"
@@ -14,6 +15,7 @@
   "dependencies": {
     "expose-gc": "^1.0.0",
     "is-node": "^1.0.2",
+    "whatwg-fetch": "^3.6.2",
     "yargs": "^15.4.1"
   },
   "localMaintainers": [

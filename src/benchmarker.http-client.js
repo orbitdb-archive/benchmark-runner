@@ -1,5 +1,8 @@
 'use strict'
 const isNode = require('is-node')
+const getFetch = () => isNode
+  ? require('whatwg-fetch')
+  : window.fetch
 
 const timeMetric = {
   name: 'time',
@@ -34,16 +37,19 @@ const memoryMetric = {
 }
 
 class Benchmarker {
-  constructor () {
-    this.interval = 1000 // record metrics every this many ms
+  constructor (url) {
+    this._url = url
     this.metrics = {
       [timeMetric.name]: timeMetric,
       [memoryMetric.name]: memoryMetric
     }
     if (isNode) this.metrics[cpuMetric.name] = cpuMetric
+    this.interval = 1000 // record metrics every this many ms
+    this.name = `benchmark-${Date.now()}`
 
-    this.recorded = {}
+    this._fetch = getFetch()
     this._timeout = null
+    this.recorded = {}
   }
 
   addMetric (name, get) {
@@ -66,6 +72,10 @@ class Benchmarker {
     this.interval = interval
   }
 
+  setBenchmarkName (name) {
+    this.name = name.toString()
+  }
+
   _recordMetrics () {
     Object.values(this.metrics).map(({ name, get }) => {
       this.recorded[name]
@@ -82,7 +92,24 @@ class Benchmarker {
   stopRecording () {
     this._recordMetrics()
     clearTimeout(this._timeout)
+    this._timeout = null
     return this.recorded
+  }
+
+  async putResults (recorded = this.recorded) {
+    if (this._timeout) throw new Error('benchmarker is still recording')
+    const results = {
+      name: this.name,
+      env: isNode ? 'node' : 'web',
+      recorded: this.recorded
+    }
+    return this._fetch(`${this._url}/api/results`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(results)
+    })
   }
 }
 
