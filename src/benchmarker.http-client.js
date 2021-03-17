@@ -52,7 +52,7 @@ class Benchmarker {
     this.recorded = {}
   }
 
-  addMetric (name, get) {
+  addMetric ({ name, get }) {
     if (this.metrics[name]) {
       throw new Error('a metric with that name already exists')
     }
