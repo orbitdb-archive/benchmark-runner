@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 const fs = require('fs')
 const path = require('path')
-const { execSync } = require('child_process')
+const util = require('util')
+const { exec: stdExec, execSync } = require('child_process')
+const exec = util.promisify(stdExec)
 const { program } = require('commander')
 const pkg = require('../package.json')
 const BenchmarkerServer = require('./benchmarker.http-server.js')
@@ -41,9 +43,13 @@ server.onResults = function (results) {
   console.log(results)
 }
 
-for (const b of benchmarkPaths) {
-  execSync(`node ${path.join(__dirname, 'exec-benchmark.node.js')} -b ${b} -u ${url}`)
+async function runBenchmarks () {
+  for (const b of benchmarkPaths) {
+    await exec(`node ${path.join(__dirname, 'exec-benchmark.node.js')} -b ${b} -u ${url}`)
+  }
 }
 
-console.log('benchmark/s complete')
-process.exit(0)
+runBenchmarks().then(() => {
+  console.log('benchmark/s complete')
+  setTimeout(() => process.exit(0), 2000)
+})
