@@ -1,5 +1,6 @@
 'use strict'
 const http = require('http')
+const WebSocket = require('ws')
 
 class BenchmarkServer {
   constructor ({ bPaths, rPath, port }) {
@@ -7,11 +8,14 @@ class BenchmarkServer {
     this.rPath = rPath
     this.port = port
     this._server = null
+    this._wss = null
     this.onResults = () => {}
   }
 
-  static create () {
+  create () {
     this._server = http.createServer(this._httpListener.bind(this)).listen(this.port)
+    this._wss = new WebSocket.Server({ server: this._server })
+    this._wss.on('connection', this._handleWsConnection.bind(this))
     return this
   }
 
@@ -32,6 +36,10 @@ class BenchmarkServer {
       res.writeHead(200)
       res.end()
     })
+  }
+
+  async _handleWsConnection (ws) {
+    ws.on('message', m => console.log(m))
   }
 }
 

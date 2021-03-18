@@ -3,6 +3,9 @@ const isNode = require('is-node')
 const getFetch = () => isNode
   ? require('node-fetch')
   : window.fetch
+const getWebSocket = () => isNode
+  ? require('ws')
+  : window.WebSocket
 
 const timeMetric = {
   name: 'time',
@@ -37,8 +40,8 @@ const memoryMetric = {
 }
 
 class Benchmarker {
-  constructor (url) {
-    this._url = url
+  constructor (host, ws) {
+    this._host = host
     this.metrics = {
       [timeMetric.name]: timeMetric,
       [memoryMetric.name]: memoryMetric
@@ -48,8 +51,26 @@ class Benchmarker {
     this.name = `benchmark-${Date.now()}`
 
     this._fetch = getFetch()
+    this._ws = ws
     this._timeout = null
     this.recorded = {}
+  }
+
+  static async create (host) {
+    const ws = await new Promise(resolve => {
+      const ws = new (getWebSocket())(`ws://${host}`)
+      ws.onopen = () => resolve(ws)
+    })
+    return new Benchmarker(host, ws)
+  }
+
+  async close () {
+    if (this._ws.readyState !== 3) {
+      await new Promise(resolve => {
+        this._ws.onclose = () => resolve()
+        this._ws.close()
+      })
+    }
   }
 
   addMetric ({ name, get }) {
@@ -84,6 +105,10 @@ class Benchmarker {
     })
   }
 
+  log (msg) {
+    this._ws.send(msg)
+  }
+
   startRecording () {
     this._recordMetrics()
     this._timeout = setTimeout(this.startRecording.bind(this), this.interval)
@@ -103,7 +128,7 @@ class Benchmarker {
       env: isNode ? 'node' : 'web',
       recorded: this.recorded
     }
-    return this._fetch(`${this._url}/api/results`, {
+    return this._fetch(`http://${this._host}/api/results`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

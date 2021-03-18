@@ -6,7 +6,7 @@ const { exec: stdExec, execSync } = require('child_process')
 const exec = util.promisify(stdExec)
 const { program } = require('commander')
 const pkg = require('../package.json')
-const BenchmarkerServer = require('./benchmarker.http-server.js')
+const BenchmarkerServer = require('./benchmarker.server.js')
 
 process.on('SIGINT', function () {
   console.log('canceling benchmark/s')
@@ -24,7 +24,7 @@ program.parse()
 let { benchmark: bPath, results: rPath, port } = program.opts()
 bPath = path.resolve(bPath)
 rPath = path.resolve(rPath)
-const url = `http://127.0.0.1:${port}`
+const host = `127.0.0.1:${port}`
 
 const bPathExists = fs.existsSync(bPath)
 if (!bPathExists) throw new Error('given benchmark path does not exit')
@@ -45,11 +45,11 @@ server.onResults = function (results) {
 
 async function runBenchmarks () {
   for (const b of benchmarkPaths) {
-    await exec(`node ${path.join(__dirname, 'exec-benchmark.node.js')} -b ${b} -u ${url}`)
+    await exec(`node ${path.join(__dirname, 'exec-benchmark.node.js')} -b ${b} -h ${host}`)
   }
 }
 
 runBenchmarks().then(() => {
   console.log('benchmark/s complete')
-  setTimeout(() => process.exit(0), 2000)
+  setTimeout(() => process.exit(0))
 })
