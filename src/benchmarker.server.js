@@ -31,8 +31,8 @@ class BenchmarkServer {
   async _handleResults (req, res) {
     let body = ''
     req.on('data', chunk => { body += chunk })
-    req.on('end', () => {
-      this.onResults(body)
+    req.on('end', async () => {
+      await this.onResults(body)
       res.writeHead(200)
       res.end()
     })
