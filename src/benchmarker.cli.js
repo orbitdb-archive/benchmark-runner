@@ -51,5 +51,5 @@ async function runBenchmarks () {
 
 runBenchmarks().then(() => {
   console.log('benchmark/s complete')
-  setTimeout(() => process.exit(0))
+  process.exit(0)
 })
