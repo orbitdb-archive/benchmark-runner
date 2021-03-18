@@ -44,7 +44,9 @@ const benchmarkPaths = bPathIsDirectory
 const server = new BenchmarkerServer({ bPaths: benchmarkPaths, rPath, port }).create()
 server.onResults = async function (results) {
   const parsed = JSON.parse(results)
-  await writeFile(path.join(rPath, `${parsed.name}.json`), results)
+  const benchmarkResultsPath = path.join(rPath, `${parsed.name}-${parsed.env}.json`)
+  await writeFile(benchmarkResultsPath, results)
+  console.log(`results written: ${benchmarkResultsPath}`)
 }
 
 async function runBenchmarks () {

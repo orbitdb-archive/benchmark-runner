@@ -16,6 +16,7 @@ async function main () {
   benchmarker.log(`starting benchmark: ${path.basename(benchmarkPath)}`)
   await benchmark(benchmarker)
   await benchmarker.close()
+  benchmarker.log(`benchmark complete: ${path.basename(benchmarkPath)}`)
 }
 
 main().then(() => process.exit(0))
