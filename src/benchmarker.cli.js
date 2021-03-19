@@ -9,7 +9,7 @@ const pkg = require('../package.json')
 const BenchmarkerServer = require('./benchmarker.server.js')
 
 process.on('SIGINT', function () {
-  console.log('canceling benchmark/s')
+  process.stdout.write('canceling benchmark/s')
   process.exit(0)
 })
 
@@ -44,11 +44,13 @@ new BenchmarkerServer({ bPaths: benchmarkPaths, rPath, port }).create()
 
 async function runBenchmarks () {
   for (const b of benchmarkPaths) {
-    await exec(`node ${path.join(__dirname, 'exec-benchmark.node.js')} -b ${b} -h ${host}`)
+    const subprocess = exec(`node ${path.join(__dirname, 'exec-benchmark.node.js')} -b ${b} -h ${host}`)
+    subprocess.child.stderr.on('data', (chunk) => process.stderr.write(chunk))
+    await subprocess
   }
 }
 
 runBenchmarks().then(() => {
-  console.log('benchmark/s complete')
+  process.stdout.write('benchmark/s complete')
   process.exit(0)
 })

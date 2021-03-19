@@ -10,13 +10,23 @@ program.parse()
 const opts = program.opts()
 
 async function main () {
-  const benchmarkPath = path.resolve(opts.benchmark)
-  const benchmark = require(benchmarkPath)
-  const benchmarker = await BenchmarkerClient.create(opts.host)
-  benchmarker.log(`starting benchmark: ${path.basename(benchmarkPath)}`)
-  await benchmark(benchmarker)
-  await benchmarker.close()
-  benchmarker.log(`benchmark complete: ${path.basename(benchmarkPath)}`)
+  try {
+    const benchmarkPath = path.resolve(opts.benchmark)
+    const benchmark = require(benchmarkPath)
+    const benchmarker = await BenchmarkerClient.create(opts.host)
+    benchmarker.log(`starting benchmark: ${path.basename(benchmarkPath)}`)
+    try {
+      await benchmark(benchmarker)
+    } catch (e) {
+      process.stderr.write('error during benchmark')
+      process.stderr.write(e.toString())
+    }
+    await benchmarker.close()
+    benchmarker.log(`benchmark complete: ${path.basename(benchmarkPath)}`)
+  } catch (e) {
+    process.stderr.write('benchmarker errored')
+    process.stderr.write(e.toString())
+  }
 }
 
 main().then(() => process.exit(0))
