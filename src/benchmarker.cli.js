@@ -40,7 +40,7 @@ const benchmarkPaths = bPathIsDirectory
     .map(p => path.join(bPath, p))
   : [bPath]
 
-new BenchmarkerServer({ bPaths: benchmarkPaths, rPath, port }).create()
+BenchmarkerServer.create({ bPaths: benchmarkPaths, rPath, port })
 
 async function runBenchmarks () {
   for (const b of benchmarkPaths) {

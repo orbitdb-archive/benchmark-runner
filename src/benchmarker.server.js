@@ -1,31 +1,20 @@
 'use strict'
 const { writeFile } = require('fs').promises
 const path = require('path')
-const http = require('http')
 const WebSocket = require('ws')
 const { parse, types } = require('./ws-action')
 const results = {}
 
-class BenchmarkServer {
+class BenchmarkerServer {
   constructor ({ bPaths, rPath, port }) {
     this.bPaths = bPaths
     this.rPath = rPath
     this.port = port
-    this._server = null
-    this._wss = null
-  }
-
-  create () {
-    this._server = http.createServer(this._httpListener.bind(this)).listen(this.port)
-    this._wss = new WebSocket.Server({ server: this._server })
+    this._wss = new WebSocket.Server({ port: this.port })
     this._wss.on('connection', this._handleWsConnection.bind(this))
-    return this
   }
 
-  _httpListener (req, res) {
-    res.writeHead(200)
-    res.end()
-  }
+  static create (opts) { return new BenchmarkerServer(opts) }
 
   async _handleWsConnection (ws) {
     ws.on('message', m => {
@@ -61,4 +50,4 @@ ${msg}
   }
 }
 
-module.exports = BenchmarkServer
+module.exports = BenchmarkerServer
