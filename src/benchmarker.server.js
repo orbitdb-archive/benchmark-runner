@@ -1,6 +1,10 @@
 'use strict'
+const { writeFile } = require('fs').promises
+const path = require('path')
 const http = require('http')
 const WebSocket = require('ws')
+const { parse, types } = require('./ws-action')
+const results = {}
 
 class BenchmarkServer {
   constructor ({ bPaths, rPath, port }) {
@@ -9,7 +13,6 @@ class BenchmarkServer {
     this.port = port
     this._server = null
     this._wss = null
-    this.onResults = () => {}
   }
 
   create () {
@@ -20,26 +23,41 @@ class BenchmarkServer {
   }
 
   _httpListener (req, res) {
-    if (req.url === '/api/results' && req.method === 'PUT') {
-      return this._handleResults(req, res)
-    } else {
-      res.writeHead(200)
-      res.end()
-    }
-  }
-
-  async _handleResults (req, res) {
-    let body = ''
-    req.on('data', chunk => { body += chunk })
-    req.on('end', async () => {
-      await this.onResults(body)
-      res.writeHead(200)
-      res.end()
-    })
+    res.writeHead(200)
+    res.end()
   }
 
   async _handleWsConnection (ws) {
-    ws.on('message', m => console.log(m))
+    ws.on('message', m => {
+      const { id, type, msg } = parse(m)
+      switch (type) {
+        case types.LOG:
+          console.log(
+`benchmark id:${id}
+${msg}
+`
+          )
+          break
+        case types.INFO:
+          results[id] = msg
+          break
+        case types.SEGMENT:
+          if (!results[id].recorded) results[id].recorded = []
+          results[id].recorded.push(msg)
+          break
+        case types.STOP:
+          this._onResults(results[id])
+          setTimeout(() => { delete results[id] })
+          break
+      }
+    })
+  }
+
+  async _onResults (results) {
+    results = { ...results }
+    const benchmarkResultsPath = path.join(this.rPath, `${results.name}.json`)
+    await writeFile(benchmarkResultsPath, JSON.stringify(results))
+    console.log(`results written: ${benchmarkResultsPath}`)
   }
 }
 

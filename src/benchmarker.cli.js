@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const fs = require('fs')
-const { writeFile } = fs.promises
 const path = require('path')
 const util = require('util')
 const { exec: stdExec, execSync } = require('child_process')
@@ -41,13 +40,7 @@ const benchmarkPaths = bPathIsDirectory
     .map(p => path.join(bPath, p))
   : [bPath]
 
-const server = new BenchmarkerServer({ bPaths: benchmarkPaths, rPath, port }).create()
-server.onResults = async function (results) {
-  const parsed = JSON.parse(results)
-  const benchmarkResultsPath = path.join(rPath, `${parsed.name}-${parsed.env}.json`)
-  await writeFile(benchmarkResultsPath, results)
-  console.log(`results written: ${benchmarkResultsPath}`)
-}
+new BenchmarkerServer({ bPaths: benchmarkPaths, rPath, port }).create()
 
 async function runBenchmarks () {
   for (const b of benchmarkPaths) {
