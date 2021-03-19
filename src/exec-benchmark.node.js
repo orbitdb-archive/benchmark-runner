@@ -1,19 +1,11 @@
-#!/usr/bin/env node
+'use strict'
 const path = require('path')
-const BenchmarkerClient = require('./benchmarker.client.js')
-const { program } = require('commander')
-program
-  .requiredOption('-b, --benchmark <path>', 'the benchmark file to run')
-  .requiredOption('-h, --host <addr:port>', 'the address and port of the benchmarker server')
-program.parse()
 
-const opts = program.opts()
-
-async function main () {
+module.exports = async function (BenchmarkerClient, { file, host }) {
   try {
-    const benchmarkPath = path.resolve(opts.benchmark)
+    const benchmarkPath = path.resolve(file)
     const benchmark = require(benchmarkPath)
-    const benchmarker = await BenchmarkerClient.create(opts.host)
+    const benchmarker = await BenchmarkerClient.create(host)
     benchmarker.log(`starting benchmark: ${path.basename(benchmarkPath)}`)
     try {
       await benchmark(benchmarker)
@@ -28,5 +20,3 @@ async function main () {
     process.stderr.write(e.toString())
   }
 }
-
-main().then(() => process.exit(0))

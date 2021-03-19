@@ -18,10 +18,10 @@ program
   .requiredOption('-b, --benchmark <path>', 'benchmark/s file or folder to run')
   .requiredOption('-r, --results <path>', 'where to make the results folder')
   .option('-p, --port <port number>', 'benchmark http service port', 7777)
-  // .option('-b, --browser', 'run the benchmarks in the browser', false)
+  .option('-b, --browser', 'run the benchmarks in the browser', false)
 
 program.parse()
-let { benchmark: bPath, results: rPath, port } = program.opts()
+let { benchmark: bPath, results: rPath, port, browser } = program.opts()
 bPath = path.resolve(bPath)
 rPath = path.resolve(rPath)
 const host = `127.0.0.1:${port}`
@@ -43,8 +43,10 @@ const benchmarkPaths = bPathIsDirectory
 BenchmarkerServer.create({ bPaths: benchmarkPaths, rPath, port })
 
 async function runBenchmarks () {
-  for (const b of benchmarkPaths) {
-    const subprocess = exec(`node ${path.join(__dirname, 'exec-benchmark.node.js')} -b ${b} -h ${host}`)
+  for (const p of benchmarkPaths) {
+    const execBenchmarkPath = path.join(__dirname, 'exec-benchmark.js')
+    const browserOption = browser ? ' -b' : ''
+    const subprocess = exec(`node ${execBenchmarkPath} -f ${p} -h ${host}${browserOption}`)
     subprocess.child.stderr.on('data', (chunk) => process.stderr.write(chunk))
     await subprocess
   }
