@@ -10,7 +10,7 @@ async function main () {
   const benchmarker = await BenchmarkerClient.create('${host}')
   await runBenchmark(benchmarker, benchmark, '${basename}')
 }
-main()
+main().then(() => window.benchmarkerFinished())
 `
   return { code }
 }
