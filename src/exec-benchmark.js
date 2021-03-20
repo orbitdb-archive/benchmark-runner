@@ -1,21 +1,17 @@
 #!/usr/bin/env node
-const BenchmarkerClient = require('./benchmarker.client.js')
-const execBenchmarkNode = require('./exec-benchmark.node.js')
-const execBenchmarkBrowser = require('./exec-benchmark.browser.js')
+const path = require('path')
 const { program } = require('commander')
 program
   .requiredOption('-f, --file <path>', 'the benchmark file to run')
   .requiredOption('-h, --host <addr:port>', 'the address and port of the benchmarker server')
-  .option('-b, --browser', 'run the benchmark in the browser', false)
+  .option('--browser', 'run the benchmark in the browser', false)
 program.parse()
 
 const opts = program.opts()
+const basename = path.basename(opts.file)
 
-let main
-if (opts.browser) {
-  main = execBenchmarkBrowser
-} else {
-  main = execBenchmarkNode
-}
+const main = opts.browser
+  ? require('./exec-benchmark.browser.js')
+  : require('./exec-benchmark.node.js')
 
-main(BenchmarkerClient, opts).then(() => process.exit(0))
+main({ ...opts, basename }).then(() => process.exit(0))
