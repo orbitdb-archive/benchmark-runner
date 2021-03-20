@@ -9,7 +9,7 @@ const pkg = require('../package.json')
 const BenchmarkerServer = require('./benchmarker.server.js')
 
 process.on('SIGINT', function () {
-  process.stdout.write('canceling benchmark/s')
+  process.stdout.write('canceling benchmark/s\n')
   process.exit(0)
 })
 
@@ -53,6 +53,6 @@ async function runBenchmarks () {
 }
 
 runBenchmarks().then(() => {
-  process.stdout.write('benchmark/s complete')
+  process.stdout.write('benchmark/s complete\n')
   process.exit(0)
 })
