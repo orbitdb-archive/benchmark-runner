@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs')
 const path = require('path')
-const util = require('util')
-const { exec: stdExec, execSync } = require('child_process')
-const exec = util.promisify(stdExec)
+const { exec, execSync } = require('child_process')
 const { program } = require('commander')
 const pkg = require('../package.json')
 const BenchmarkerServer = require('./benchmarker.server.js')
@@ -47,9 +45,9 @@ async function runBenchmarks () {
     const execBenchmarkPath = path.join(__dirname, 'exec-benchmark.js')
     const browserOption = browser ? ' --browser' : ''
     const subprocess = exec(`node ${execBenchmarkPath} -f ${p} -h ${host}${browserOption}`)
-    subprocess.child.stdout.on('data', (chunk) => process.stdout.write(chunk))
-    subprocess.child.stderr.on('data', (chunk) => process.stderr.write(chunk))
-    await subprocess
+    subprocess.stdout.on('data', (chunk) => process.stdout.write(chunk))
+    subprocess.stderr.on('data', (chunk) => process.stderr.write(chunk))
+    await new Promise(resolve => subprocess.on('exit', resolve))
   }
 }
 
