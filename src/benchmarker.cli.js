@@ -24,8 +24,6 @@ rPath = path.resolve(rPath)
 
 const bPathExists = fs.existsSync(bPath)
 if (!bPathExists) throw new Error('given benchmark path does not exit')
-const rPathExists = fs.existsSync(rPath)
-if (!rPathExists) fs.mkdirSync(rPath, { recursive: true })
 
 const bPathIsDirectory = bPathExists && fs.lstatSync(bPath).isDirectory()
 const benchmarkPaths = bPathIsDirectory
