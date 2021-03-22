@@ -34,9 +34,8 @@ const benchmarkPaths = bPathIsDirectory
     .map(p => path.join(bPath, p))
   : [bPath]
 
-const server = BenchmarkerServer.create({ bPaths: benchmarkPaths, rPath })
-
 async function runBenchmarks () {
+  const server = BenchmarkerServer.create({ bPaths: benchmarkPaths, rPath })
   const host = `127.0.0.1:${server.address().port}`
   for (const p of benchmarkPaths) {
     const subprocess = fork(
