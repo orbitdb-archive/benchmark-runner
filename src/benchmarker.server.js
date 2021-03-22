@@ -1,13 +1,16 @@
 'use strict'
-const { writeFile } = require('fs').promises
 const path = require('path')
+const { writeFile } = require('fs').promises
 const WebSocket = require('ws')
 const { parse, types } = require('./ws-action')
 const results = {}
+const logMessage = (id, msg) =>
+`benchmark id:${id}
+${msg}
+`
 
 class BenchmarkerServer {
-  constructor ({ bPaths, rPath, port }) {
-    this.bPaths = bPaths
+  constructor ({ rPath, port }) {
     this.rPath = rPath
     this.port = port
     this._wss = new WebSocket.Server({ port: this.port })
@@ -21,11 +24,7 @@ class BenchmarkerServer {
       const { id, type, msg } = parse(m)
       switch (type) {
         case types.LOG:
-          console.log(
-`benchmark id:${id}
-${msg}
-`
-          )
+          console.log(logMessage(id, msg))
           break
         case types.INFO:
           results[id] = msg
@@ -46,7 +45,7 @@ ${msg}
     results = { ...results }
     const benchmarkResultsPath = path.join(this.rPath, `${results.name}.json`)
     await writeFile(benchmarkResultsPath, JSON.stringify(results))
-    console.log(`results written: ${benchmarkResultsPath}`)
+    console.log(logMessage(results.id, `results written: ${benchmarkResultsPath}`))
   }
 }
 

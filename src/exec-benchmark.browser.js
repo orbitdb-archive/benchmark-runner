@@ -2,6 +2,7 @@
 const path = require('path')
 const { fork } = require('child_process')
 const puppeteer = require('puppeteer')
+const port = 3000
 
 async function spawnWebpackServer ({ file: f, host: h, basename: b, port: p }) {
   return new Promise(resolve => {
@@ -15,14 +16,14 @@ async function spawnWebpackServer ({ file: f, host: h, basename: b, port: p }) {
 }
 
 module.exports = async function (opts) {
-  const webpackServer = await spawnWebpackServer({ port: 3000, ...opts })
+  const webpackServer = await spawnWebpackServer({ port, ...opts })
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
   page.on('error', e => process.stderr.write(e.toString()))
   page.on('pageerror', e => process.stderr.write(e.toString()))
   await new Promise(resolve => {
     page.exposeFunction('benchmarkerFinished', () => resolve())
-    page.goto('http://localhost:3000')
+    page.goto(`http://localhost:${port}`)
   })
   await browser.close()
   webpackServer.kill('SIGINT')

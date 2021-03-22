@@ -38,24 +38,23 @@ const memoryMetric = {
 }
 
 class Benchmarker {
-  constructor (host, ws) {
-    this._host = host
+  constructor (ws) {
+    this._ws = ws
+    this._timeout = null
+
     this.id = makeId()
     this.info = {
+      id: this.id,
       name: `benchmark-${this.id}`,
       env: isNode ? 'node' : 'web',
       metrics: []
     }
-    this.interval = 1000 // record metrics every this many ms
+    this._interval = 1000 // record metrics every this many ms
 
-    this.metrics = [
-      timeMetric,
-      memoryMetric
-    ]
+    this.metrics = []
+    this.addMetric(timeMetric)
+    this.addMetric(memoryMetric)
     if (isNode) this.addMetric(cpuMetric)
-
-    this._ws = ws
-    this._timeout = null
   }
 
   static async create (host) {
@@ -63,7 +62,7 @@ class Benchmarker {
       const ws = new (getWebSocket())(`ws://${host}`)
       ws.onopen = () => resolve(ws)
     })
-    return new Benchmarker(host, ws)
+    return new Benchmarker(ws)
   }
 
   async close () {
@@ -93,19 +92,19 @@ class Benchmarker {
     if (this._timeout) {
       throw new Error('metrics have already started being recorded')
     }
-    this.interval = interval
+    this._interval = interval
   }
 
   setBenchmarkName (name) {
     this.info.name = name.toString()
   }
 
-  _sendAction (action) {
-    this._ws.send(JSON.stringify(withId(this.id, action)))
-  }
-
   log (msg) {
     this._sendAction(creators.LOG(msg))
+  }
+
+  _sendAction (action) {
+    this._ws.send(JSON.stringify(withId(this.id, action)))
   }
 
   _recordMetrics () {
@@ -115,9 +114,10 @@ class Benchmarker {
   startRecording () {
     if (!this._timeout) {
       this._sendAction(creators.INFO(this.info))
+      const interval = this._interval
       const repeater = () => {
         this._recordMetrics()
-        this._timeout = setTimeout(repeater.bind(this), this.interval)
+        this._timeout = setTimeout(repeater.bind(this), interval)
       }
       repeater()
     }
