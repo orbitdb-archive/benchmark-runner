@@ -5,7 +5,7 @@ program
   .requiredOption('-f, --file <path>', 'the benchmark file to run')
   .requiredOption('-h, --host <addr:port>', 'the address and port of the benchmarker server')
   .requiredOption('-b, --basename <basename>', 'the file\'s name')
-  .option('-p, --port <port>', 'the port to host the bundled  at', 3000)
+  .requireOption('-p, --port <port>', 'the port to host the bundled  at')
 program.parse()
 
 const { file, host, basename, port } = program.opts()

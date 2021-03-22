@@ -15,14 +15,12 @@ program
   .version(pkg.version)
   .requiredOption('-b, --benchmark <path>', 'benchmark/s file or folder to run')
   .requiredOption('-r, --results <path>', 'where to make the results folder')
-  .option('-p, --port <port number>', 'benchmark http service port', 7777)
   .option('--browser', 'run the benchmarks in the browser', false)
 
 program.parse()
-let { benchmark: bPath, results: rPath, port, browser } = program.opts()
+let { benchmark: bPath, results: rPath, browser } = program.opts()
 bPath = path.resolve(bPath)
 rPath = path.resolve(rPath)
-const host = `127.0.0.1:${port}`
 
 const bPathExists = fs.existsSync(bPath)
 if (!bPathExists) throw new Error('given benchmark path does not exit')
@@ -38,9 +36,10 @@ const benchmarkPaths = bPathIsDirectory
     .map(p => path.join(bPath, p))
   : [bPath]
 
-BenchmarkerServer.create({ bPaths: benchmarkPaths, rPath, port })
+const server = BenchmarkerServer.create({ bPaths: benchmarkPaths, rPath })
 
 async function runBenchmarks () {
+  const host = `127.0.0.1:${server.address().port}`
   for (const p of benchmarkPaths) {
     const subprocess = fork(
       path.join(__dirname, 'exec-benchmark.js'),

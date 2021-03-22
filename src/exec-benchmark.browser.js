@@ -2,7 +2,7 @@
 const path = require('path')
 const { fork } = require('child_process')
 const puppeteer = require('puppeteer')
-const port = 3000
+const getPort = require('./get-port')
 
 async function spawnWebpackServer ({ file: f, host: h, basename: b, port: p }) {
   return new Promise(resolve => {
@@ -16,6 +16,7 @@ async function spawnWebpackServer ({ file: f, host: h, basename: b, port: p }) {
 }
 
 module.exports = async function (opts) {
+  const port = await getPort()
   const webpackServer = await spawnWebpackServer({ port, ...opts })
   const browser = await puppeteer.launch()
   const page = await browser.newPage()

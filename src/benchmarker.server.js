@@ -12,9 +12,9 @@ ${msg}
 class BenchmarkerServer {
   constructor ({ rPath, port }) {
     this.rPath = rPath
-    this.port = port
-    this._wss = new WebSocket.Server({ port: this.port })
+    this._wss = new WebSocket.Server({ port: port || 0 })
     this._wss.on('connection', this._handleWsConnection.bind(this))
+    this.address = this._wss.address.bind(this._wss)
   }
 
   static create (opts) { return new BenchmarkerServer(opts) }
