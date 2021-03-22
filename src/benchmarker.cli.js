@@ -31,7 +31,7 @@ if (!rPathExists) fs.mkdirSync(rPath, { recursive: true })
 
 const bPathIsDirectory = bPathExists && fs.lstatSync(bPath).isDirectory()
 const benchmarkPaths = bPathIsDirectory
-  ? execSync('ls *.benchmark.js', { cwd: bPath })
+  ? execSync('ls -1 *.benchmark.js', { cwd: bPath })
     .toString()
     .split('\n')
     .filter(a => a)
