@@ -33,7 +33,7 @@ const compiler = webpack({
 
 const app = express()
 const instance = middleware(compiler)
-process.stdout.write('bundling...\n')
+console.log('bundling...')
 instance.waitUntilValid(() => instance.close()) // after bundling turn off file watching
 app.use(instance)
 app.listen(port, () => process.send && process.send('listening'))
