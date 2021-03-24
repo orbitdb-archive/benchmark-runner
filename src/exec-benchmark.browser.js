@@ -18,7 +18,7 @@ async function spawnWebpackServer ({ file: f, host: h, basename: b, port: p }) {
 module.exports = async function (opts) {
   const port = await getPort()
   const webpackServer = await spawnWebpackServer({ port, ...opts })
-  const browser = await puppeteer.launch()
+  const browser = await puppeteer.launch({ args: ['--enable-precise-memory-info'] })
   const page = await browser.newPage()
   page.on('error', e => process.stderr.write(e.toString()))
   page.on('pageerror', e => process.stderr.write(e.toString()))
