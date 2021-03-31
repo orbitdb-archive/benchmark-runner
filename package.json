@@ -18,6 +18,7 @@
     "express": "^4.17.1",
     "html-webpack-plugin": "^4.5.2",
     "is-node": "^1.0.2",
+    "puppeteer": "^8.0.0",
     "val-loader": "^2.1.2",
     "webpack": "^4.46.0",
     "webpack-dev-middleware": "^4.1.0",
