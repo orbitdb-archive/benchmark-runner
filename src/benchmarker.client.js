@@ -4,38 +4,12 @@ const isNode = require('is-node')
 const getWebSocket = () => isNode
   ? require('ws')
   : window.WebSocket
-
-const timeMetric = {
-  name: 'time',
-  get: () => Date.now()
-}
-const cpuMetric = {
-  name: 'cpu',
-  get: () => {
-    const cpuUsage = process.cpuUsage()
-    return Math.round((cpuUsage.user + cpuUsage.system) / 1000)
-  }
-}
-const memoryMetric = {
-  name: 'memory',
-  get: () => {
-    const memorySample = isNode
-      ? process.memoryUsage()
-      : window.performance.memory
-    const memory = {
-      total: null,
-      used: null
-    }
-    if (isNode) {
-      memory.total = memorySample.heapTotal
-      memory.used = memorySample.heapUsed
-    } else {
-      memory.total = memorySample.totalJSHeapSize
-      memory.used = memorySample.usedJSHeapSize
-    }
-    return memory
-  }
-}
+const {
+  timeMetric,
+  cpuUsageMetric,
+  memoryUsedMetric,
+  memoryTotalMetric
+} = require('./metrics')
 
 class Benchmarker {
   constructor (ws) {
@@ -53,8 +27,9 @@ class Benchmarker {
 
     this.metrics = []
     this.addMetric(timeMetric)
-    this.addMetric(memoryMetric)
-    if (isNode) this.addMetric(cpuMetric)
+    this.addMetric(memoryUsedMetric)
+    this.addMetric(memoryTotalMetric)
+    if (isNode) this.addMetric(cpuUsageMetric)
   }
 
   static async create (host) {
