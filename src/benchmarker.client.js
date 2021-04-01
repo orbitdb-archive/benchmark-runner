@@ -12,10 +12,12 @@ const {
 } = require('./metrics')
 
 class Benchmarker {
-  constructor (ws) {
+  constructor (ws, fixtures) {
     this._ws = ws
     this._timeout = null
 
+    this.isNode = isNode
+    this.fixturesPath = isNode ? fixtures + '/node' : './fixtures'
     this.id = makeId()
     this.info = {
       id: this.id,
@@ -32,12 +34,12 @@ class Benchmarker {
     if (isNode) this.addMetric(cpuUsageMetric)
   }
 
-  static async create (host) {
+  static async create (host, fixtures) {
     const ws = await new Promise(resolve => {
       const ws = new (getWebSocket())(`ws://${host}`)
       ws.onopen = () => resolve(ws)
     })
-    return new Benchmarker(ws)
+    return new Benchmarker(ws, fixtures)
   }
 
   async close () {

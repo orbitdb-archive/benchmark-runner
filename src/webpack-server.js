@@ -6,9 +6,10 @@ program
   .requiredOption('-h, --host <addr:port>', 'the address and port of the benchmarker server')
   .requiredOption('-b, --basename <basename>', 'the file\'s name')
   .requiredOption('-p, --port <port>', 'the port to host the bundled  at')
+  .requiredOption('-i, --fixtures <path>', 'the path to pre-built benchmark fixtures')
 program.parse()
 
-const { file, host, basename, port } = program.opts()
+const { file, host, basename, port, fixtures } = program.opts()
 
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -24,7 +25,7 @@ const compiler = webpack({
     rules: [
       {
         test: webpackEntry,
-        use: [{ loader: 'val-loader', options: { file, host, basename } }]
+        use: [{ loader: 'val-loader', options: { file, host, basename, fixtures } }]
       }
     ]
   },
@@ -36,4 +37,9 @@ const instance = middleware(compiler)
 console.log('bundling...')
 instance.waitUntilValid(() => instance.close()) // after bundling turn off file watching
 app.use(instance)
-app.listen(port, () => process.send && process.send('listening'))
+try {
+  app.listen(port, () => process.send && process.send('listening'))
+} catch (e) {
+  console.error(e)
+  process.exit(1)
+}
