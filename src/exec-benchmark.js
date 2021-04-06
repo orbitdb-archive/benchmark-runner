@@ -1,14 +1,6 @@
 #!/usr/bin/env node
 const path = require('path')
-const { program } = require('commander')
-program
-  .requiredOption('-f, --file <path>', 'the benchmark file to run')
-  .requiredOption('-h, --host <addr:port>', 'the address and port of the benchmarker server')
-  .option('--browser', 'run the benchmark in the browser', false)
-  .requiredOption('-i, --fixtures <path>', 'the path to pre-built benchmark fixtures')
-program.parse()
-
-const opts = program.opts()
+const { workerData: opts } = require('worker_threads')
 const basename = path.basename(opts.file)
 
 const main = opts.browser
@@ -17,4 +9,4 @@ const main = opts.browser
 
 main({ ...opts, basename })
   .then(() => process.exit(0))
-  .catch(() => process.exit(1))
+  .catch((e) => { console.error(e); process.exit(1) })

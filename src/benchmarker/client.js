@@ -1,9 +1,9 @@
 'use strict'
-const { makeId, withId, creators } = require('./ws-action')
 const isNode = require('is-node')
 const getWebSocket = () => isNode
   ? require('ws')
   : window.WebSocket
+const { makeId, withInfo, creators } = require('./ws-action')
 const {
   timeMetric,
   cpuUsageMetric,
@@ -17,12 +17,12 @@ class Benchmarker {
     this._timeout = null
 
     this.isNode = isNode
-    this.fixturesPath = isNode ? fixtures + '/node' : './fixtures'
+    this.fixtures = isNode ? fixtures + '/node' : './fixtures'
     this.id = makeId()
     this.info = {
       id: this.id,
       name: `benchmark-${this.id}`,
-      env: isNode ? 'node' : 'web',
+      env: isNode ? 'node' : 'browser',
       metrics: []
     }
     this._interval = 1000 // record metrics every this many ms
@@ -81,7 +81,7 @@ class Benchmarker {
   }
 
   _sendAction (action) {
-    this._ws.send(JSON.stringify(withId(this.id, action)))
+    this._ws.send(JSON.stringify(withInfo(this.info)(action)))
   }
 
   _recordMetrics () {
@@ -90,7 +90,6 @@ class Benchmarker {
 
   startRecording () {
     if (!this._timeout) {
-      this._sendAction(creators.INFO(this.info))
       const interval = this._interval
       const repeater = () => {
         this._recordMetrics()
@@ -104,7 +103,6 @@ class Benchmarker {
     clearTimeout(this._timeout)
     this._timeout = null
     this._recordMetrics()
-    this._sendAction(creators.STOP())
   }
 }
 
