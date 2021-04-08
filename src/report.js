@@ -9,7 +9,7 @@ const padStr = (str, max) => {
   return str + repeatStr(' ', length)
 }
 
-const reporter = (results) => {
+const reporter = (results, compare = []) => {
   const reports = [{
     name: 'Benchmark Name',
     ops: 'Ops / ms',
@@ -22,34 +22,51 @@ const reporter = (results) => {
   let maxMemWidth = reports[0].mem.length
 
   for (const benchmark of results) {
+    const savedBenchmark = compare.find(c => c.name === benchmark.name)
+
     const nameWidth = benchmark.name.length
     if (maxNameWidth < nameWidth) {
       maxNameWidth = nameWidth
     }
 
-    const totalMs = (benchmark.elapsed / 1000000).toFixed(4)
-    const opsPerMs = (benchmark.stats.count / totalMs).toFixed(4)
-    const memUsed = benchmark.memory.after.heapUsed - benchmark.memory.before.heapUsed
-    const memUsedMb = (memUsed / 1024 / 1024).toFixed(2)
+    const getCalculations = (b) => {
+      const totalMs = (b.elapsed / 1000000).toFixed(4)
+      const opsPerMs = (b.stats.count / totalMs).toFixed(4)
+      const memUsed = b.memory.after.heapUsed - b.memory.before.heapUsed
+      const memUsedMb = (memUsed / 1024 / 1024).toFixed(2)
+      return { totalMs, opsPerMs, memUsed, memUsedMb }
+    }
 
-    const opsWidth = opsPerMs.toString().length
+    const calculations = getCalculations(benchmark)
+    const savedCalculations = savedBenchmark ? getCalculations(savedBenchmark) : undefined
+    const getOutput = (type) => {
+      const delta = savedCalculations ? (calculations[type] - savedCalculations[type]).toFixed(2) : 0
+      return delta ? `${calculations[type]} (${delta})` : calculations[type]
+    }
+
+    const ops = getOutput('opsPerMs')
+    const opsWidth = ops.toString().length
     if (maxOpsWidth < opsWidth) {
       maxOpsWidth = opsWidth
     }
+
+    const totalMs = getOutput('totalMs')
     const totalWidth = totalMs.toString().length
     if (maxTotalWidth < totalWidth) {
       maxTotalWidth = totalWidth
     }
-    const memWidth = memUsedMb.toString().length
+
+    const mem = getOutput('memUsedMb')
+    const memWidth = mem.toString().length
     if (maxMemWidth < memWidth) {
       maxMemWidth = memWidth
     }
 
     reports.push({
       name: benchmark.name,
-      ops: opsPerMs,
-      totalMs: totalMs,
-      mem: memUsedMb
+      ops,
+      totalMs,
+      mem
     })
   }
 

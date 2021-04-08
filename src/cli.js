@@ -9,6 +9,18 @@ const argv = yargs
   .version(false)
   .help('help').alias('help', 'h')
   .options({
+    save: {
+      alias: 's',
+      description: 'Save results to file',
+      requiresArg: true,
+      required: false,
+    },
+    compare: {
+      alias: 'c',
+      description: 'Compare results to file',
+      requiresArg: true,
+      required: false,
+    },
     baseline: {
       alias: 'b',
       description: 'Run baseline benchmarks only',

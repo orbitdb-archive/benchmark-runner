@@ -2,6 +2,7 @@ require('expose-gc')
 global.gc()
 
 const os = require('os')
+const fs = require('fs-extra')
 
 const report = require('./report')
 
@@ -52,8 +53,14 @@ const start = async (benchmarks, argv) => {
     output += ` in ${(runnerElapsed / 1000000000).toFixed(2)} seconds`
     process.stdout.write(output)
 
+    if (baselineOnly && argv.save) {
+      fs.ensureFileSync(argv.save)
+      fs.writeJsonSync(argv.save, results, { spaces: 2 })
+    }
+
     if (argv.report) {
-      report(results)
+      const compare = argv.compare ? fs.readJsonSync(argv.compare) : undefined
+      report(results, compare)
     }
   } catch (e) {
     console.log(e)
