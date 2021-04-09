@@ -2,7 +2,7 @@
 const Ipfs = require('ipfs')
 const OrbitDb = require('orbit-db')
 const { ipfsOrbitDb, shutdown } = require('./util')
-const height = 300
+const height = 5000
 
 const options = { replicate: false, overwrite: true }
 const openLog = (orbitDb) => orbitDb.create('write-log', 'eventlog', options)
