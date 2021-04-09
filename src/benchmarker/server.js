@@ -24,11 +24,11 @@ class BenchmarkerServer {
           console.log(logMessage(info.id, msg))
           break
         case types.SEGMENT: {
-          const { id, env } = info
-          if (!this.results[id]) this.results[id] = {}
-          if (!this.results[id][env]) this.results[id][env] = info
-          if (!this.results[id][env].recorded) this.results[id][env].recorded = []
-          this.results[id][env].recorded.push(msg)
+          const { name, env } = info
+          if (!this.results[name]) this.results[name] = {}
+          if (!this.results[name][env]) this.results[name][env] = info
+          if (!this.results[name][env].recorded) this.results[name][env].recorded = []
+          this.results[name][env].recorded.push(msg)
           break
         }
       }

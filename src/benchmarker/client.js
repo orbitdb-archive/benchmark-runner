@@ -6,7 +6,7 @@ const getWebSocket = () => isNode
 const { makeId, withInfo, creators } = require('./ws-action')
 const {
   timeMetric,
-  cpuUsageMetric,
+  // cpuUsageMetric,
   memoryUsedMetric,
   memoryTotalMetric
 } = require('./metrics')
@@ -31,7 +31,7 @@ class Benchmarker {
     this.addMetric(timeMetric)
     this.addMetric(memoryUsedMetric)
     this.addMetric(memoryTotalMetric)
-    if (isNode) this.addMetric(cpuUsageMetric)
+    // if (isNode) this.addMetric(cpuUsageMetric)
   }
 
   static async create (host, fixtures) {

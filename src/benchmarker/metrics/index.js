@@ -7,7 +7,7 @@ const useMetricState = (state, get) => () => {
 }
 
 const timeMetric = {
-  name: 'milliseconds',
+  name: 'time',
   get: useMetricState(0, (state) => {
     const now = Date.now()
     return {
@@ -54,11 +54,11 @@ const memorySample = () => {
 }
 const toMegabytes = (bytes) => bytes / 1000000
 const memoryUsedMetric = {
-  name: 'used memory (mb)',
+  name: 'heap used',
   get: () => toMegabytes(memorySample().used)
 }
 const memoryTotalMetric = {
-  name: 'total memory (mb)',
+  name: 'heap total',
   get: () => toMegabytes(memorySample().total)
 }
 

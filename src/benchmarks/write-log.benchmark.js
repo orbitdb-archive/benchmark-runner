@@ -2,18 +2,21 @@
 const Ipfs = require('ipfs')
 const OrbitDb = require('orbit-db')
 const { ipfsOrbitDb, shutdown } = require('./util')
-const name = 'write-log'
 const height = 300
 
 const options = { replicate: false, overwrite: true }
-const openLog = (orbitDb) => orbitDb.create(name, 'eventlog', options)
+const openLog = (orbitDb) => orbitDb.create('write-log', 'eventlog', options)
 
 async function benchmark (benchmarker) {
-  const [ipfs, orbitDb] = await ipfsOrbitDb(Ipfs, OrbitDb, benchmarker.fixturesPath)
+  const [ipfs, orbitDb] = await ipfsOrbitDb(Ipfs, OrbitDb, benchmarker.fixtures)
   const log = await openLog(orbitDb)
 
   let i = 0
   let entries = 0
+  benchmarker.addMetric({
+    name: 'writes',
+    get: () => i
+  })
   benchmarker.addMetric({
     name: 'writes per second',
     get: () => {
@@ -27,7 +30,6 @@ entry height:            ${entries}
       return perSecond
     }
   })
-  benchmarker.setBenchmarkName(`${name}-${height}-${benchmarker.info.env}`)
 
   benchmarker.startRecording()
   for (; i < height; i++) {

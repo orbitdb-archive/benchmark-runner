@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const path = require('path')
-const open = require('open')
 const reporter = require('./reporter')
 const benchmarksDir = path.join(__dirname, './benchmarks')
 const reportsDir = path.join(__dirname, '../reports')
@@ -14,7 +13,6 @@ program.version(version)
 program
   // .option('-i, --ipfs <go or js>', 'ipfs implementation for orbitdb', 'js')
   .option('-o, --output [file path]', 'report file output path', defaultReportPath)
-  .option('--open-report', 'opens report file in browser once finished')
   .option('--no-node', 'skip benchmarks in nodejs')
   .option('--no-browser', 'skip benchmarks in the browser')
   .option('--only-fixtures', 'prebuilds fixtures at path')
@@ -23,7 +21,7 @@ program
 program.parse()
 
 let {
-  output, openReport, node, browser, onlyFixtures, existFixtures, fixtures
+  output, node, browser, onlyFixtures, existFixtures, fixtures
 } = program.opts()
 
 // output stays true if no path is in arg
@@ -49,7 +47,9 @@ const server = require('./benchmarker/server.js').create()
 const { Worker } = require('worker_threads')
 
 async function execBenchmarks (browser) {
+  const env = browser ? 'browser' : 'node'
   const host = `127.0.0.1:${server.address().port}`
+  console.log(`running ${env} ${placeholder}/s`)
   for (const p of benchmarkPaths) {
     // const hook = await getBenchmarkHook(p, execBrowser)
     const data = { host, file: p, browser, onlyFixtures, existFixtures, fixtures }
@@ -66,21 +66,19 @@ async function execBenchmarks (browser) {
       resolve(code)
     }))
   }
+  console.log(`${env} ${placeholder}/s complete`)
 }
 
 async function main () {
-  console.log(`running ${placeholder}/s`)
   // run benchmarks
   if (node) await execBenchmarks(false)
   if (browser) await execBenchmarks(true)
-  console.log(`${placeholder}/s complete`)
   // write report
   if (!onlyFixtures && output !== true) {
     console.log('writing report')
     const results = { ...server.results }
-    // await reporter(output, results)
+    await reporter(output, results)
     console.log('report written')
-    // if (openReport) open(output)
   }
 }
 

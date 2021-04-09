@@ -8,7 +8,7 @@ module.exports = async function (opts) {
   await webpackServer({ port: webpackPort, ...opts })
   const browser = await puppeteer.launch({
     args: ['--enable-precise-memory-info'],
-    userDataDir: path.join(opts.fixtures, 'puppeteer')
+    userDataDir: path.join(opts.fixtures, 'browser')
   })
   const [page] = await browser.pages()
   page.on('error', e => process.stderr.write(e.toString()))

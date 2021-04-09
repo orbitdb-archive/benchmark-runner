@@ -3,11 +3,16 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const InlineAssetsHtmlPlugin = require('inline-assets-html-plugin')
-const webpackEntry = path.join(__dirname, 'app.js')
+const webpackEntry = path.join(__dirname, 'App.js')
+
+// async function jsonReport (output, results) {}
+//
+// async function htmlReport (output, results) {}
 
 module.exports = (output, results) => new Promise((resolve, reject) => {
   webpack(
     {
+      // mode: 'development',
       mode: 'production',
       entry: webpackEntry,
       output: {
@@ -51,7 +56,7 @@ module.exports = (output, results) => new Promise((resolve, reject) => {
       } else if (stats.hasErrors()) {
         reject(stats.compilation.errors)
       } else {
-        console.log(output)
+        console.log('output=' + output)
         resolve()
       }
     }
