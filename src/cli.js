@@ -5,6 +5,7 @@ const benchmarksDir = path.join(__dirname, './benchmarks')
 const reportsDir = path.join(__dirname, '../reports')
 const defaultFixturesPath = path.join(__dirname, '../.fixtures')
 const defaultReportPath = path.join(reportsDir, 'benchmark-report.html')
+const execBenchmarkPath = path.join(__dirname, 'exec-benchmark.js')
 
 // program cli
 const { program } = require('commander')
@@ -53,10 +54,7 @@ async function execBenchmarks (browser) {
   for (const p of benchmarkPaths) {
     // const hook = await getBenchmarkHook(p, execBrowser)
     const data = { host, file: p, browser, onlyFixtures, existFixtures, fixtures }
-    const worker = new Worker(
-      path.join(__dirname, 'exec-benchmark.js'),
-      { workerData: data }
-    )
+    const worker = new Worker(execBenchmarkPath, { workerData: data })
     await new Promise((resolve, reject) => worker.on('exit', (code) => {
     //   hook.exit().then(() => code
     //     ? reject(new Error('benchmark failed during execution'))
