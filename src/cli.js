@@ -13,23 +13,28 @@ const { version } = require('../package.json')
 program.version(version)
 program
   // .option('-i, --ipfs <go or js>', 'ipfs implementation for orbitdb', 'js')
-  .option('-o, --output [file path]', 'report file output path', defaultReportPath)
+  .option('-o, --output [file path]', 'report file output path (.html or .json)', defaultReportPath)
+  .option('--no-output', 'no output file')
   .option('--no-node', 'skip benchmarks in nodejs')
   .option('--no-browser', 'skip benchmarks in the browser')
   .option('--only-fixtures', 'prebuilds fixtures at path')
   .option('-e, --exist-fixtures', 'use existing fixtures')
   .option('-f, --fixtures [path]', 'fixtures path for benchmarks', defaultFixturesPath)
+  .option('-b, --baselines <path>', 'baselines to use for comparison')
 program.parse()
 
 let {
-  output, node, browser, onlyFixtures, existFixtures, fixtures
+  output, node, browser, onlyFixtures, existFixtures, fixtures, baselines
 } = program.opts()
 
 // output stays true if no path is in arg
-if (output !== true) {
+if (output !== false) {
   output = output === path.basename(output)
     ? path.join(reportsDir, output)
     : path.resolve(output)
+}
+if (baselines) {
+  baselines = path.resolve(baselines)
 }
 const placeholder = onlyFixtures ? 'fixture' : 'benchmark'
 
@@ -72,11 +77,9 @@ async function main () {
   if (node) await execBenchmarks(false)
   if (browser) await execBenchmarks(true)
   // write report
-  if (!onlyFixtures && output !== true) {
-    console.log('writing report')
-    const results = { ...server.results }
-    await reporter(output, results)
-    console.log('report written')
+  if (!onlyFixtures) {
+    const results = server.results
+    await reporter(output, results, baselines)
   }
 }
 
