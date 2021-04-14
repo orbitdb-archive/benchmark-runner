@@ -9,11 +9,6 @@ const processMetric = (nums, elapsed) => {
   }
   return { max: max, avg: (total / elapsed) }
 }
-const getLabel = (key) => {
-  if (key.includes('time')) return ' seconds'
-  if (key.includes('heap')) return ' mb'
-  return ''
-}
 const percentChange = (num, den) => {
   const change = (num / den - 1) * 100
   return `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`
@@ -45,7 +40,8 @@ module.exports = (results, baselines) => benchmarks(results)
         .flatMap(m =>
           Object.keys(result.processed[m]).map(p => {
             const pro = result.processed[m][p]
-            const columns = [`${p} ${m}: `, `${pro.toFixed(2)}${getLabel(m)}`]
+            const label = m.includes('heap') ? ' mb' : ''
+            const columns = [`${p} ${m}: `, `${pro.toFixed(2)}${label}`]
             if (baseline && baseline.processed[m] && baseline.processed[m][p]) {
               columns.push(percentChange(pro, baseline.processed[m][p]))
             }
