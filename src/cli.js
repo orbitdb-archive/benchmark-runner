@@ -13,10 +13,10 @@ program.version(version)
 program
   // .option('-i, --ipfs <go or js>', 'ipfs implementation for orbitdb', 'js')
   .option('-o, --output [file path]', 'report output path (.html or .json)', defaultOutputPath)
+  .option('-b, --baselines <path>', 'baselines to use for comparison (.json output)')
   .option('--no-output', 'no output file')
   .option('--no-node', 'skip benchmarks in nodejs')
   .option('--no-browser', 'skip benchmarks in the browser')
-  .option('-b, --baselines <path>', 'baselines to use for comparison')
 program.parse()
 
 let { output, node, browser, baselines } = program.opts()
