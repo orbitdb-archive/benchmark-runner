@@ -9,23 +9,9 @@ const openLog = async (orbitDb, name, opts = options) => {
   return orbitDb.open(address, opts)
 }
 
-// async function fixture (benchmarker) {
-//   const [ipfs, orbitDb] = await ipfsOrbitDb(Ipfs, OrbitDb, benchmarker.fixtures)
-//   const log = await openLog(orbitDb, name)
-//
-//   for (let i = 0; i < height; i++) {
-//     await log.add(Date.now().toString(), { pin: false })
-//   }
-//
-//   await log.close()
-//   await shutdown(ipfs, orbitDb)
-// }
-
 async function benchmark (benchmarker) {
-  const [ipfs, orbitDb] = await ipfsOrbitDb(Ipfs, OrbitDb, benchmarker.fixtures)
+  const [ipfs, orbitDb] = await ipfsOrbitDb(Ipfs, OrbitDb, benchmarker.dir)
   const log = await openLog(orbitDb, 'log', { ...options, overwrite: false })
-
-  console.log(log.address.toString())
 
   let i = 0
   let entries = 0

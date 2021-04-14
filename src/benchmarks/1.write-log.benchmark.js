@@ -8,7 +8,7 @@ const options = { replicate: false, overwrite: true }
 const openLog = (orbitDb) => orbitDb.create('log', 'eventlog', options)
 
 async function benchmark (benchmarker) {
-  const [ipfs, orbitDb] = await ipfsOrbitDb(Ipfs, OrbitDb, benchmarker.fixtures)
+  const [ipfs, orbitDb] = await ipfsOrbitDb(Ipfs, OrbitDb, benchmarker.dir)
   const log = await openLog(orbitDb)
 
   let i = 0

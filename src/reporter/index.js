@@ -101,7 +101,6 @@ async function htmlReport (output, results) {
         } else if (stats.hasErrors()) {
           reject(stats.compilation.errors)
         } else {
-          console.log('output=' + output)
           resolve()
         }
       }

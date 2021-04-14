@@ -1,5 +1,6 @@
 'use strict'
 const isNode = require('is-node')
+const nodeDir = (dir) => require('path').join(dir, 'node')
 const getWebSocket = () => isNode
   ? require('ws')
   : window.WebSocket
@@ -12,12 +13,12 @@ const {
 } = require('./metrics')
 
 class Benchmarker {
-  constructor (ws, fixtures) {
+  constructor (ws, dir) {
     this._ws = ws
+    this.dir = isNode ? nodeDir(dir) : dir
     this._timeout = null
 
     this.isNode = isNode
-    this.fixtures = isNode ? fixtures + '/node' : './fixtures'
     this.id = makeId()
     this.info = {
       id: this.id,
@@ -34,12 +35,12 @@ class Benchmarker {
     // if (isNode) this.addMetric(cpuUsageMetric)
   }
 
-  static async create (host, fixtures) {
+  static async create (host, dir) {
     const ws = await new Promise(resolve => {
       const ws = new (getWebSocket())(`ws://${host}`)
       ws.onopen = () => resolve(ws)
     })
-    return new Benchmarker(ws, fixtures)
+    return new Benchmarker(ws, dir)
   }
 
   async close () {

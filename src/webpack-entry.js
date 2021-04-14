@@ -4,7 +4,7 @@ const runSource = require('fs').readFileSync(path.join(__dirname, 'run.js'))
 const comment = '// '
 const indent = '  '
 
-module.exports = function ({ file, host, basename, onlyFixtures, existFixtures, fixtures }) {
+module.exports = function ({ file, host, basename, dir }) {
   const lines = runSource.toString().split('\n')
   const browserImportIndex = lines.indexOf('// browser import') + 1
   const nodeImportIndex = lines.indexOf(indent + '// node import') + 1
@@ -19,10 +19,8 @@ module.exports = function ({ file, host, basename, onlyFixtures, existFixtures, 
     host: '${host}',
     file: '${file}',
     basename: '${basename}',
-    onlyFixtures: ${onlyFixtures},
-    existFixtures: ${existFixtures},
-    fixtures: '${fixtures}'
-  }).then(() => window.benchmarkFinished())`)
+    dir: '${dir}'
+  }).then(() => window.benchmarkComplete())`)
   lines.push(end)
 
   return { code: lines.join('\n') }

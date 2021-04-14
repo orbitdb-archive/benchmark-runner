@@ -32,7 +32,6 @@ module.exports = (results, baselines) => benchmarks(results)
           return { ...o, [m]: { max, avg } }
         }, {})
     }
-    console.log(result.processed)
     result.stats = [
       ['elapsed time: ', `${elapsed} seconds`, ...baselineChange],
       ...Object.keys(result.processed)

@@ -28,9 +28,6 @@ module.exports = async function ({ port, ...options }) {
   // after bundling turn off file watching
   instance.waitUntilValid(() => instance.close())
   app.use(instance)
-  try {
-    app.listen(port)
-  } catch (e) {
-    console.error(e)
-  }
+  const server = app.listen(0, '127.0.0.1')
+  return server.address()
 }

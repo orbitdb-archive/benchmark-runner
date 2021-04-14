@@ -1,7 +1,7 @@
 'use strict'
-async function ipfsOrbitDb (Ipfs, OrbitDb, fixturesPath) {
-  const ipfs = await Ipfs.create({ repo: fixturesPath + '/ipfs' })
-  const orbitDb = await OrbitDb.createInstance(ipfs, { directory: fixturesPath + '/orbitDb' })
+async function ipfsOrbitDb (Ipfs, OrbitDb, dir) {
+  const ipfs = await Ipfs.create({ repo: dir + '/ipfs' })
+  const orbitDb = await OrbitDb.createInstance(ipfs, { directory: dir + '/orbitDb' })
   return [ipfs, orbitDb]
 }
 
