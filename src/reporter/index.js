@@ -16,6 +16,7 @@ module.exports = async function (output, results, baselines) {
 
   if (output) {
     console.log(`writing output to ${output}`)
+    await fs.mkdir(path.dirname(output), { recursive: true })
     if (output.endsWith('.json')) {
       await jsonReport(output, results)
     } else if (output.endsWith('.html')) {
