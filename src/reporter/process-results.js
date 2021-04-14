@@ -14,6 +14,10 @@ const getLabel = (key) => {
   if (key.includes('heap')) return ' mb'
   return ''
 }
+const percentChange = (num, den) => {
+  const change = (num / den - 1) * 100
+  return `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`
+}
 
 module.exports = (results, baselines) => benchmarks(results)
   .flatMap(b => envs(results)(b).map(e => [b, e]))
@@ -21,6 +25,9 @@ module.exports = (results, baselines) => benchmarks(results)
     const result = results[b][e]
     const baseline = baselines && baselines[b] && baselines[b][e]
     const elapsed = getMetric(result)('time').pop() / 1000
+    const baselineChange = baseline && baseline.processed.time
+      ? [percentChange(elapsed, baseline.processed.time)]
+      : []
     result.processed = {
       time: elapsed,
       ...result.metrics
@@ -32,7 +39,7 @@ module.exports = (results, baselines) => benchmarks(results)
     }
     console.log(result.processed)
     result.stats = [
-      ['elapsed time:', `${elapsed} seconds`],
+      ['elapsed time: ', `${elapsed} seconds`, ...baselineChange],
       ...Object.keys(result.processed)
         .filter(m => m !== 'time')
         .flatMap(m =>
@@ -40,9 +47,7 @@ module.exports = (results, baselines) => benchmarks(results)
             const pro = result.processed[m][p]
             const columns = [`${p} ${m}: `, `${pro.toFixed(2)}${getLabel(m)}`]
             if (baseline && baseline.processed[m] && baseline.processed[m][p]) {
-              const basePro = baseline.processed[m][p]
-              const change = (pro / basePro - 1) * 100
-              columns.push(`${change >= 0 ? '+' : ''}${change.toFixed(2)}%`)
+              columns.push(percentChange(pro, baseline.processed[m][p]))
             }
             return columns
           })
