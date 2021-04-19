@@ -7,7 +7,7 @@ const getWebSocket = () => isNode
 const { makeId, withInfo, creators } = require('./ws-action')
 const {
   timeMetric,
-  // cpuUsageMetric,
+  cpuUsageMetric,
   memoryUsedMetric,
   memoryTotalMetric
 } = require('./metrics')
@@ -30,9 +30,6 @@ class Benchmarker {
 
     this.metrics = []
     this.addMetric(timeMetric)
-    this.addMetric(memoryUsedMetric)
-    this.addMetric(memoryTotalMetric)
-    // if (isNode) this.addMetric(cpuUsageMetric)
   }
 
   static async create (host, dir) {
@@ -50,6 +47,15 @@ class Benchmarker {
         this._ws.close()
       })
     }
+  }
+
+  trackMemory () {
+    this.addMetric(memoryUsedMetric)
+    this.addMetric(memoryTotalMetric)
+  }
+
+  trackCpu () {
+    if (isNode) this.addMetric(cpuUsageMetric)
   }
 
   addMetric ({ name, get }) {
