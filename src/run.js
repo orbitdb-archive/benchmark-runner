@@ -7,6 +7,7 @@ const runPlace = (place) =>
   async function (benchmarker, basename, placehold) {
     benchmarker.log(`starting ${place}: ${basename}`)
     try {
+      benchmarker.log('benchmarking...')
       await placehold(benchmarker)
     } catch (e) {
       benchmarker.log(`error running ${place}`)
