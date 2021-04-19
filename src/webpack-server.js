@@ -25,9 +25,14 @@ module.exports = async function ({ port, ...options }) {
   const app = express()
   const instance = middleware(compiler)
   console.log('bundling...')
-  // after bundling turn off file watching
-  instance.waitUntilValid(() => instance.close())
+  await new Promise(resolve => instance.waitUntilValid(() => {
+    instance.close() // after bundling turn off file watching
+    resolve()
+  }))
   app.use(instance)
-  const server = app.listen(0, '127.0.0.1')
-  return server.address()
+  return new Promise(resolve => {
+    const server = app.listen(0, '127.0.0.1', () => {
+      resolve(server.address().port)
+    })
+  })
 }
