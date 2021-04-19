@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const path = require('path')
+const { existsSync, statSync } = require('fs')
 const reporter = require('./reporter')
-const benchmarksDir = path.join(__dirname, './benchmarks')
 const reportsDir = path.join(__dirname, '../reports')
 const defaultOutputPath = path.join(reportsDir, 'benchmark-report.html')
 const execBenchmarkPath = path.join(__dirname, 'exec-benchmark.js')
@@ -12,14 +12,18 @@ const { version } = require('../package.json')
 program.version(version)
 program
   // .option('-i, --ipfs <go or js>', 'ipfs implementation for orbitdb', 'js')
+  .option('-b, --benchmarks <path>', 'benchmark folder or file', path.resolve('./benchmarks'))
   .option('-o, --output [file path]', 'report output path (.html or .json)', defaultOutputPath)
-  .option('-b, --baselines <path>', 'baselines to use for comparison (.json output)')
+  .option('-l, --baselines <path>', 'baselines to use for comparison (.json output)')
   .option('--no-output', 'no output file')
   .option('--no-node', 'skip benchmarks in nodejs')
   .option('--no-browser', 'skip benchmarks in the browser')
 program.parse()
 
-let { output, node, browser, baselines } = program.opts()
+let { benchmarks, output, node, browser, baselines } = program.opts()
+
+benchmarks = path.resolve(benchmarks)
+if (!existsSync(benchmarks)) throw new Error(`benchmarks path does not exist: ${benchmarks}`)
 
 // output stays true if no path is in arg
 if (output !== false) {
@@ -35,11 +39,13 @@ const tmpdir = mkdtempSync(path.join(os.tmpdir(), 'orbit-db-benchmark_'))
 
 // get benchmark file paths
 const { execSync } = require('child_process')
-const benchmarkPaths = execSync('ls -1 *.benchmark.js', { cwd: benchmarksDir })
-  .toString()
-  .split('\n')
-  .filter(a => a)
-  .map(p => path.join(benchmarksDir, p))
+const benchmarkPaths = statSync(benchmarks).isDirectory()
+  ? execSync('ls -1 *.benchmark.js', { cwd: benchmarks })
+    .toString()
+    .split('\n')
+    .filter(a => a)
+    .map(p => path.join(benchmarks, p))
+  : [benchmarks]
 
 // benchmarker server, collects logs and results
 const server = require('./benchmarker/server.js').create()
@@ -48,8 +54,8 @@ const server = require('./benchmarker/server.js').create()
 const { Worker } = require('worker_threads')
 
 async function execBenchmarks (browser) {
-  const env = browser ? 'browser' : 'node'
   const host = `127.0.0.1:${server.address().port}`
+  const env = browser ? 'browser' : 'node'
   console.log(`running ${env} benchmark/s`)
   for (const p of benchmarkPaths) {
     const data = { host, file: p, browser, dir: tmpdir }
