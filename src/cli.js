@@ -2,8 +2,6 @@
 const path = require('path')
 const { existsSync, statSync } = require('fs')
 const reporter = require('./reporter')
-const reportsDir = path.join(__dirname, '../reports')
-const defaultOutputPath = path.join(reportsDir, 'benchmark-report.html')
 const execBenchmarkPath = path.join(__dirname, 'exec-benchmark.js')
 
 // program cli
@@ -13,7 +11,7 @@ program.version(version)
 program
   // .option('-i, --ipfs <go or js>', 'ipfs implementation for orbitdb', 'js')
   .option('-b, --benchmarks <path>', 'benchmark folder or file', path.resolve('./benchmarks'))
-  .option('-o, --output [file path]', 'report output path (.html or .json)', defaultOutputPath)
+  .option('-o, --output <file path>', 'report output path (.html or .json)')
   .option('-l, --baselines <path>', 'baselines to use for comparison (.json output)')
   .option('--no-output', 'no output file')
   .option('--no-node', 'skip benchmarks in nodejs')
@@ -25,12 +23,7 @@ let { benchmarks, output, node, browser, baselines } = program.opts()
 benchmarks = path.resolve(benchmarks)
 if (!existsSync(benchmarks)) throw new Error(`benchmarks path does not exist: ${benchmarks}`)
 
-// output stays true if no path is in arg
-if (output !== false) {
-  output = output === path.basename(output)
-    ? path.join(reportsDir, output)
-    : path.resolve(output)
-}
+if (output) output = path.resolve(output)
 if (baselines) baselines = path.resolve(baselines)
 
 const { mkdtempSync } = require('fs')
