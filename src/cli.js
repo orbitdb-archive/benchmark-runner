@@ -13,7 +13,7 @@ program
   // .option('-i, --ipfs <go or js>', 'ipfs implementation for orbitdb', 'js')
   .option('-b, --benchmarks <path>', 'benchmark folder or file', path.resolve('./benchmarks'))
   .option('-o, --output <file path>', 'report output path (.html or .json)')
-  .option('-l, --baselines <path>', 'baselines to use for comparison (.json output)')
+  .option('-i, --baselines <path>', 'baselines to use for comparison (.json output)')
   .option('--no-node', 'skip benchmarks in nodejs')
   .option('--no-browser', 'skip benchmarks in the browser')
 program.parse()
