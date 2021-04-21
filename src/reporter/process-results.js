@@ -1,13 +1,13 @@
 'use strict'
 const { benchmarks, envs, getMetric } = require('./util')
-const processMetric = (nums, elapsed) => {
+const processMetric = (nums) => {
   let total = 0
   let max = 0
   for (const n of nums) {
     total += n
     if (max < n) max = n
   }
-  return { max: max, avg: (total / elapsed) }
+  return { max: max, avg: (total / nums.length) }
 }
 const percentChange = (num, den) => {
   const change = (num / den - 1) * 100
@@ -28,7 +28,7 @@ module.exports = (results, baselines) => benchmarks(results)
       ...result.metrics
         .filter(m => m !== 'time')
         .reduce((o, m) => {
-          const { max, avg } = processMetric(getMetric(result)(m), elapsed)
+          const { max, avg } = processMetric(getMetric(result)(m))
           return { ...o, [m]: { max, avg } }
         }, {})
     }
