@@ -40,13 +40,13 @@ const benchmarkPaths = statSync(benchmarks).isDirectory()
   : [benchmarks]
 
 // benchmarker server, collects logs and results
-const server = require('./benchmarker/server.js').create()
+const benchmarkerServer = require('./benchmarker/server.js').create()
 
 // const getBenchmarkHook = require('./get-benchmark-hook')
 const { Worker } = require('worker_threads')
 
 async function execBenchmarks (browser) {
-  const host = `127.0.0.1:${server.address().port}`
+  const host = `127.0.0.1:${benchmarkerServer.address().port}`
   const env = browser ? 'browser' : 'node'
   console.log(`running ${env} benchmark/s`)
   for (const p of benchmarkPaths) {
@@ -62,7 +62,7 @@ async function main () {
   if (node) await execBenchmarks(false)
   if (browser) await execBenchmarks(true)
   // write report
-  const results = server.results
+  const results = benchmarkerServer.results
   await reporter(output, results, baselines)
 }
 
