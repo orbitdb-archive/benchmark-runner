@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const path = require('path')
+const net = require('net')
 const { existsSync, statSync } = require('fs')
 const reporter = require('./reporter')
 const execBenchmarkPath = path.join(__dirname, 'exec-benchmark.js')
@@ -42,15 +43,28 @@ const benchmarkPaths = statSync(benchmarks).isDirectory()
 // benchmarker server, collects logs and results
 const benchmarkerServer = require('./benchmarker/server.js').create()
 
+// webpack port; reuse same port for all benchmarks to keep IndexedDB same
+let webpackPort = null
+const getPort = () => new Promise((resolve, reject) => {
+  const server = net.createServer()
+  server.unref()
+  server.on('error', reject)
+  server.listen(0, () => {
+    const { port } = server.address()
+    server.close(() => resolve(port))
+  })
+})
+
 // const getBenchmarkHook = require('./get-benchmark-hook')
 const { Worker } = require('worker_threads')
 
 async function execBenchmarks (browser) {
   const host = `127.0.0.1:${benchmarkerServer.address().port}`
+  if (browser && !webpackPort) webpackPort = await getPort()
   const env = browser ? 'browser' : 'node'
   console.log(`running ${env} benchmark/s`)
   for (const p of benchmarkPaths) {
-    const data = { host, file: p, browser, dir: tmpdir }
+    const data = { host, file: p, browser, dir: tmpdir, webpackPort }
     const worker = new Worker(execBenchmarkPath, { workerData: data })
     await new Promise((resolve, reject) => worker.on('exit', resolve))
   }

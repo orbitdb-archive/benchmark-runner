@@ -6,7 +6,7 @@ const middleware = require('webpack-dev-middleware')
 const express = require('express')
 const webpackEntry = path.join(__dirname, 'webpack-entry.js')
 
-module.exports = async function ({ port, ...options }) {
+module.exports = async function ({ webpackPort, ...options }) {
   const compiler = webpack({
     mode: 'production',
     entry: webpackEntry,
@@ -30,9 +30,9 @@ module.exports = async function ({ port, ...options }) {
     resolve()
   }))
   app.use(instance)
-  return new Promise(resolve => {
-    const server = app.listen(0, '127.0.0.1', () => {
-      resolve(server.address().port)
-    })
+  return new Promise((resolve, reject) => {
+    const server = app.listen(webpackPort, '127.0.0.1')
+    server.once('listening', resolve)
+    server.on('error', reject)
   })
 }

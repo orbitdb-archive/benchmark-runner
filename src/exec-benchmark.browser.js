@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer')
 const webpackServer = require('./webpack-server')
 
 module.exports = async function (opts) {
-  const webpackPort = await webpackServer(opts).catch(console.error)
+  await webpackServer(opts).catch(console.error)
   const browser = await puppeteer.launch({
     args: ['--enable-precise-memory-info'],
     userDataDir: path.join(opts.dir, 'browser')
@@ -15,7 +15,7 @@ module.exports = async function (opts) {
   // await benchmarks to complete
   await new Promise(resolve => {
     page.exposeFunction('benchmarkComplete', resolve)
-      .then(() => page.goto(`http://localhost:${webpackPort}`))
+      .then(() => page.goto(`http://localhost:${opts.webpackPort}`))
   })
   await browser.close()
 }
