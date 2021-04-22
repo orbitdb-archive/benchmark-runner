@@ -8,15 +8,21 @@
 
 `npm i orbit-db-benchmark-runner`
 
-## Usage
+## CLI Usage
 
-TBD
+Check [cli.js](./src/cli.js) or use `npx benchmarker -h` for help
 
-## Testing
+```
+Options:
+  -V, --version             output the version number
+  -b, --benchmarks <path>   benchmark folder or file (default: "./benchmarks")
+  -o, --output <file path>  report output path (.html or .json)
+  -i, --baselines <path>    baselines to use for comparison (.json output)
+  --no-node                 skip nodejs benchmarks
+  --no-browser              skip browser benchmarks
+```
 
-Mocha is used as the testing framework, SinonJS for stubs and mocks and ChaiJS for assertions. To run tests:
-
-`npm run test`
+**benchmarks ran for comparison are best ran on their own machine or a machine with few other things happening in the background**
 
 ## Contributing
 
