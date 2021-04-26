@@ -6,9 +6,7 @@
   "bin": {
     "benchmarker": "./src/cli.js"
   },
-  "scripts": {
-    "test": "nyc mocha"
-  },
+  "scripts": {},
   "author": "mistakia",
   "license": "MIT",
   "dependencies": {
