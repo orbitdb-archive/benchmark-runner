@@ -5,8 +5,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const middleware = require('webpack-dev-middleware')
 const express = require('express')
 const webpackEntry = path.join(__dirname, 'webpack-entry.js')
+const webpackPort = 8000
 
-module.exports = async function ({ webpackPort, ...options }) {
+module.exports = async function (options) {
   const compiler = webpack({
     mode: 'production',
     entry: webpackEntry,
@@ -31,8 +32,13 @@ module.exports = async function ({ webpackPort, ...options }) {
   }))
   app.use(instance)
   return new Promise((resolve, reject) => {
-    const server = app.listen(webpackPort, '127.0.0.1')
-    server.once('listening', resolve)
-    server.on('error', reject)
+    try {
+      const server = app.listen(webpackPort, '127.0.0.1')
+      server.once('listening', () => resolve(webpackPort))
+      server.on('error', reject)
+    } catch (e) {
+      console.error(`benchmark bundle host failed to listen on port ${webpackPort}`)
+      throw e
+    }
   })
 }
