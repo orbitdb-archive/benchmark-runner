@@ -58,7 +58,7 @@ const getPort = () => new Promise((resolve, reject) => {
 // const getBenchmarkHook = require('./get-benchmark-hook')
 const { Worker } = require('worker_threads')
 
-async function execBenchmarks (browser) {
+async function execBenchmarks ({ browser } = {}) {
   const host = `127.0.0.1:${benchmarkerServer.address().port}`
   if (browser && !webpackPort) webpackPort = await getPort()
   const env = browser ? 'browser' : 'node'
@@ -73,8 +73,8 @@ async function execBenchmarks (browser) {
 
 async function main () {
   // run benchmarks
-  if (node) await execBenchmarks(false)
-  if (browser) await execBenchmarks(true)
+  if (node) await execBenchmarks()
+  if (browser) await execBenchmarks({ browser })
   // write report
   const results = benchmarkerServer.results
   await reporter(output, results, baselines)
