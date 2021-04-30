@@ -3,7 +3,7 @@ const BenchmarkerClient = require('./benchmarker/client.js')
 // browser import
 // const { benchmark } = require(%)
 
-module.exports = async function ({ host, file, basename, dir }) {
+async function run ({ host, file, basename, dir }) {
   // node import
   const { benchmark } = require(file)
   const benchmarker = await BenchmarkerClient.create(host, dir)
@@ -20,3 +20,5 @@ module.exports = async function ({ host, file, basename, dir }) {
   benchmarker.log(`benchmark complete: ${basename}`)
   await benchmarker.close()
 }
+
+module.exports = run
