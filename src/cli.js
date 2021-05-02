@@ -27,7 +27,7 @@ if (baselines) baselines = path.resolve(baselines)
 
 const { mkdtempSync } = require('fs')
 const os = require('os')
-const tmpdir = mkdtempSync(path.join(os.tmpdir(), 'orbit-db-benchmark_'))
+const tmpdir = mkdtempSync(path.join(os.tmpdir(), 'odb-benchmark-runner_'))
 
 // get benchmark file paths
 const { execSync } = require('child_process')
