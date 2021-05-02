@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 const path = require('path')
 const { existsSync, statSync } = require('fs')
-const reporter = require('./reporter')
 const execBenchmarkPath = path.join(__dirname, 'exec-benchmark.js')
+const reporter = require('./reporter')
 
 // program cli
 const { program } = require('commander')
