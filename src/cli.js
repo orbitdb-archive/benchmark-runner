@@ -42,7 +42,6 @@ const benchmarkPaths = statSync(benchmarks).isDirectory()
 // benchmarker server, collects logs and results
 const benchmarkerServer = require('./benchmarker/server.js').create()
 
-// const getBenchmarkHook = require('./get-benchmark-hook')
 const { Worker } = require('worker_threads')
 
 async function execBenchmarks ({ browser } = {}) {
