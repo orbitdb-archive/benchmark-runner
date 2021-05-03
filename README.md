@@ -22,7 +22,12 @@ Options:
   --no-browser              skip browser benchmarks
 ```
 
-**benchmarks ran for comparison are best ran on their own machine or a machine with few other things happening in the background**
+##### Running Comparisons
+
+1. Create the baseline report output to use for comparison: `npx benchmarker -o report.json`
+2. Use the output baseline report with the baseline option: `npx benchmarker -i report.json`
+
+***benchmarks ran for comparison are best ran on their own machine or a machine with few other things happening in the background***
 
 ## Contributing
 
