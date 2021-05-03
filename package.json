@@ -6,7 +6,9 @@
   "bin": {
     "benchmarker": "./src/cli.js"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "nyc mocha"
+  },
   "author": "mistakia",
   "license": "MIT",
   "dependencies": {
@@ -35,6 +37,8 @@
   },
   "devDependencies": {
     "ipfs": "^0.54.4",
+    "mocha": "^8.3.2",
+    "nyc": "^15.1.0",
     "orbit-db": "^0.26.1",
     "standard": "^14.3.4"
   },
