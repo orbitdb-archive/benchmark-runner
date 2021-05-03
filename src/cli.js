@@ -20,10 +20,13 @@ program.parse()
 let { benchmarks, output, node, browser, baselines } = program.opts()
 
 benchmarks = path.resolve(benchmarks)
-if (!existsSync(benchmarks)) throw new Error(`benchmarks path does not exist: ${benchmarks}`)
-
 if (output) output = path.resolve(output)
 if (baselines) baselines = path.resolve(baselines)
+
+if (!existsSync(benchmarks)) throw new Error(`benchmarks path does not exist: ${benchmarks}`)
+if (baselines && !existsSync(baselines)) {
+  throw new Error(`baselines path does not exist: ${baselines}`)
+}
 
 const { mkdtempSync } = require('fs')
 const os = require('os')
