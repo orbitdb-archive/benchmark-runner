@@ -12,6 +12,8 @@
 
 Check [cli.js](./src/cli.js) or use `npx benchmarker -h` for help
 
+*If you want to run benchmarks in a folder have their file name end in `.benchmark.js`.*
+
 ```
 Options:
   -V, --version             output the version number
@@ -28,6 +30,10 @@ Options:
 2. Use the output baseline report with the baseline option: `npx benchmarker -i report.json`
 
 ***benchmarks ran for comparison are best ran on their own machine or a machine with few other things happening in the background***
+
+## Writing Benchmarks
+
+Benchmark files must export an object with an asynchronous method `benchmark`. The method takes 1 parameter `benchmarker` which is used to control the recording and give information about the benchmark. Please see [test.benchmark.js]('./test/fixtures/benchmarks/test.benchmark.js') for an example. 
 
 ## Contributing
 
