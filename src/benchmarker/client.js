@@ -83,6 +83,10 @@ class Benchmarker {
     this.info.name = name.toString()
   }
 
+  setHookInfo (info) {
+    this.info.hook = info
+  }
+
   log (msg) {
     this._sendAction(creators.LOG(msg))
   }

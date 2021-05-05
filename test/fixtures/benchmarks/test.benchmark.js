@@ -24,5 +24,24 @@ module.exports = {
     benchmarker.startRecording()
     // run only what you want to benchmark here
     benchmarker.stopRecording()
+  },
+  /**
+   * hook - used to set up external systems for the benchmark. hook methods are ran in a nodejs env by the runner.
+   *
+   * @param {string} host the address:port of the benchmarker server
+   * @param {string} file the path of the benchmark file to be ran
+   * @param {bool} browser is the benchmark environment the browser
+   * @param {string} dir the path of the tmpdir used by the benchmarker
+   *
+   * @return {object} contains two optional properties. 'info' which is passed to the benchmarker at benchmarker.info.hook, and 'stop' which is ran after the benchmark and used to cleanup the hook.
+   */
+  hook: async function ({ host, file, browser, dir }) {
+    const path = require('path')
+
+    // hooks can return an object for the runner to use
+    return {
+      info: path.join(__dirname, 'example'), // info to be passed to the benchmarker
+      stop: async () => {} // for the runner to cleanup the hook
+    }
   }
 }

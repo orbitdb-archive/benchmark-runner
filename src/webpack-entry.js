@@ -4,7 +4,7 @@ const runSource = require('fs').readFileSync(path.join(__dirname, 'run.js'))
 const comment = '// '
 const indent = '  '
 
-module.exports = function ({ file, host, basename, dir }) {
+module.exports = function ({ file, host, basename, dir, hook }) {
   const lines = runSource.toString().split('\n')
   const browserImportIndex = lines.indexOf('// browser import') + 1
   const nodeImportIndex = lines.indexOf(indent + '// node import') + 1
@@ -19,7 +19,8 @@ module.exports = function ({ file, host, basename, dir }) {
     host: '${host}',
     file: '${file}',
     basename: '${basename}',
-    dir: '${dir}'
+    dir: '${dir}',
+    hook: ${JSON.stringify(hook)}
   }).then(() => window.benchmarkComplete())`)
   lines.push(end)
 
