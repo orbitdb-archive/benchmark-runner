@@ -27,7 +27,7 @@ module.exports = async function (output, results, baselines) {
 }
 
 function consoleReport (results) {
-  const sp = (n) => new Array(n).fill(' ').join('')
+  const sp = (n) => new Array(Math.max(0, n)).fill(' ').join('')
   const report =
 `
 benchmarks report:
@@ -39,7 +39,7 @@ ${benchmarks(results).sort().map(benchmark => [
     results[benchmark][env].stats
       .map(s => {
         const c1 = `${sp(6)}${s[0]}`
-        const c2 = `${sp(40 - c1.length)}${s[1]}`
+        const c2 = `${sp(50 - c1.length)}${s[1]}`
         const c3 = s[2] ? `${sp(60 - c1.length - c2.length)}${s[2]}` : ''
         return c1 + c2 + c3
       })
