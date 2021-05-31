@@ -1,68 +1,71 @@
 #!/usr/bin/env node
+const path = require('path')
+const { existsSync, statSync } = require('fs')
+const execBenchmarkPath = path.join(__dirname, 'exec-benchmark.js')
+const reporter = require('./reporter')
 
-/* global process */
-const { start } = require('./index')
+// program cli
+const { program } = require('commander')
+const { version } = require('../package.json')
+program.version(version)
+program
+  // .option('-i, --ipfs <go or js>', 'ipfs implementation for orbitdb', 'js')
+  .option('-b, --benchmarks <path>', 'benchmark folder or file', './benchmarks')
+  .option('-o, --output <file path>', 'report output path (.html or .json)')
+  .option('-i, --baselines <path>', 'baselines to use for comparison (.json output)')
+  .option('--no-node', 'skip nodejs benchmarks')
+  .option('--no-browser', 'skip browser benchmarks')
+program.parse()
 
-const yargs = require('yargs')
-const argv = yargs
-  .usage('OrbitDB benchmark runner\n\nUsage: node --expose-gc $0 [options]')
-  .version(false)
-  .help('help').alias('help', 'h')
-  .options({
-    baseline: {
-      alias: 'b',
-      description: 'Run baseline benchmarks only',
-      boolean: true,
-      requiresArg: false,
-      required: false
-    },
-    report: {
-      alias: 'r',
-      description: 'Output report (Default: false)',
-      requiresArg: false,
-      boolean: true,
-      required: false
-    },
-    list: {
-      alias: 'l',
-      description: 'List all benchmarks',
-      requiresArg: false,
-      required: false,
-      boolean: true
-    },
-    grep: {
-      alias: 'g',
-      description: '<regexp> Regular expression used to match benchmarks (Default: /.*/)',
-      requiresArg: true,
-      required: false
-    },
-    stressLimit: {
-      description: '<Int or Infinity> seconds to run a stress benchmark (Default: 300)',
-      requiresArg: true,
-      required: false
-    },
-    baselineLimit: {
-      description: '<Int> benchmark cycle limit for baseline benchmarks (Default: 1000)',
-      requiresArg: true,
-      required: false
-    },
-    logLimit: {
-      description: '<Int> max log size used for baseline benchmarks (inclusive) (Default: 10000)',
-      requiresArg: true,
-      required: false
-    }
-  })
-  .example('$0 -r -g append-baseline', 'Run a single benchmark (append-baseline)')
-  .example('$0 -r -g values-.*-baseline', 'Run all of the values baseline benchmarks')
-  .argv
+let { benchmarks, output, node, browser, baselines } = program.opts()
 
-// Was this called directly from the CLI?
-// For mocha tests - maybe we can mitigate this but for now it works
-if (require.main === module) {
-  try {
-    const benchmarks = require(process.cwd() + '/benchmarks')
-    start(benchmarks, argv)
-  } catch (e) {
-    throw new Error(e.message)
-  }
+benchmarks = path.resolve(benchmarks)
+if (output) output = path.resolve(output)
+if (baselines) baselines = path.resolve(baselines)
+
+if (!existsSync(benchmarks)) throw new Error(`benchmarks path does not exist: ${benchmarks}`)
+if (baselines && !existsSync(baselines)) {
+  throw new Error(`baselines path does not exist: ${baselines}`)
 }
+
+const { mkdtempSync } = require('fs')
+const os = require('os')
+const tmpdir = mkdtempSync(path.join(os.tmpdir(), 'odb-benchmark-runner_'))
+
+// get benchmark file paths
+const { execSync } = require('child_process')
+const benchmarkPaths = statSync(benchmarks).isDirectory()
+  ? execSync('ls -1 *.benchmark.js', { cwd: benchmarks })
+    .toString()
+    .split('\n')
+    .filter(a => a)
+    .map(p => path.join(benchmarks, p))
+  : [benchmarks]
+
+// benchmarker server, collects logs and results
+const benchmarkerServer = require('./benchmarker/server.js').create()
+
+const { Worker } = require('worker_threads')
+
+async function execBenchmarks ({ browser } = {}) {
+  const host = `127.0.0.1:${benchmarkerServer.address().port}`
+  const env = browser ? 'browser' : 'node'
+  console.log(`running ${env} benchmark/s`)
+  for (const p of benchmarkPaths) {
+    const data = { host, file: p, browser, dir: tmpdir }
+    const worker = new Worker(execBenchmarkPath, { workerData: data })
+    await new Promise((resolve, reject) => worker.on('exit', resolve))
+  }
+  console.log(`${env} benchmark/s complete`)
+}
+
+async function main () {
+  // run benchmarks
+  if (node) await execBenchmarks()
+  if (browser) await execBenchmarks({ browser })
+  // write report
+  const results = benchmarkerServer.results
+  await reporter(output, results, baselines)
+}
+
+main().then(() => process.exit(0))
