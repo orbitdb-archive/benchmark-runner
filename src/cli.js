@@ -1,13 +1,23 @@
 #!/usr/bin/env node
-const path = require('path')
-const { existsSync, statSync } = require('fs')
+import path from 'path'
+import { mkdtempSync, existsSync, statSync } from 'fs'
+import os from 'os'
+import { execSync } from 'child_process'
+import BenchmarkerServer from './benchmarker/server.js'
+import { Worker } from 'worker_threads'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const execBenchmarkPath = path.join(__dirname, 'exec-benchmark.js')
-const reporter = require('./reporter')
+import reporter from './reporter/index.js'
 
 // program cli
-const { program } = require('commander')
-const { version } = require('../package.json')
-program.version(version)
+import { program } from 'commander'
+import packageJson from '../package.json' assert { type: 'json' }
+console.log(packageJson.version)
+program.version(packageJson.version)
 program
   // .option('-i, --ipfs <go or js>', 'ipfs implementation for orbitdb', 'js')
   .option('-b, --benchmarks <path>', 'benchmark folder or file', './benchmarks')
@@ -28,12 +38,9 @@ if (baselines && !existsSync(baselines)) {
   throw new Error(`baselines path does not exist: ${baselines}`)
 }
 
-const { mkdtempSync } = require('fs')
-const os = require('os')
 const tmpdir = mkdtempSync(path.join(os.tmpdir(), 'odb-benchmark-runner_'))
 
 // get benchmark file paths
-const { execSync } = require('child_process')
 const benchmarkPaths = statSync(benchmarks).isDirectory()
   ? execSync('ls -1 *.benchmark.js', { cwd: benchmarks })
     .toString()
@@ -41,11 +48,9 @@ const benchmarkPaths = statSync(benchmarks).isDirectory()
     .filter(a => a)
     .map(p => path.join(benchmarks, p))
   : [benchmarks]
-
+  
 // benchmarker server, collects logs and results
-const benchmarkerServer = require('./benchmarker/server.js').create()
-
-const { Worker } = require('worker_threads')
+const benchmarkerServer = BenchmarkerServer.create()
 
 async function execBenchmarks ({ browser } = {}) {
   const host = `127.0.0.1:${benchmarkerServer.address().port}`

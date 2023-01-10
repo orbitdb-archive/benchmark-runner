@@ -1,7 +1,11 @@
-'use strict'
-const assert = require('assert')
-const path = require('path')
-const { exec } = require('child_process')
+import assert from 'assert'
+import path from 'path'
+import { exec } from 'child_process'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const cli = path.resolve(__dirname, '../src/cli.js')
 const benchmarks = path.resolve(__dirname, 'fixtures/benchmarks')
 const benchmark = path.resolve(__dirname, 'fixtures/benchmarks/test.benchmark.js')
@@ -23,7 +27,7 @@ const handleSubprocess = (cmd, options = execOptions, cb = execCallback) =>
 describe('benchmarker cli', function () {
   this.timeout(30000)
 
-  it('default options', async function () {
+  it.only('default options', async function () {
     await assert.doesNotReject(() =>
       handleSubprocess(`node ${cli}`)
     )

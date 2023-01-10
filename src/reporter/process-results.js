@@ -1,5 +1,4 @@
-'use strict'
-const { benchmarks, envs, getMetric } = require('./util')
+import { benchmarks, envs, getMetric } from './util.js'
 const processMetric = (nums) => {
   let total = 0
   let max = 0
@@ -16,7 +15,7 @@ const percent = (numerator, denominator) => {
 }
 
 // for each benchmark result in each environment, add .processed and .stats properties
-module.exports = (results, baselines) => benchmarks(results)
+export default (results, baselines) => benchmarks(results)
   .flatMap(b => envs(results)(b).map(e => [b, e]))
   .forEach(([b, e]) => {
     // get the benchmark result for benchmark b and environment e

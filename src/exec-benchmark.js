@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-const path = require('path')
-const { workerData: opts } = require('worker_threads')
+import path from 'path'
+import { workerData as opts } from 'worker_threads'
 const basename = path.basename(opts.file)
 
-async function main () {
-  const { hook } = require(opts.file)
+export default async function main () {
+  const { hook } = await import(opts.file)
   const { info, stop: stopHook } = (hook && await hook(opts)) || {}
 
   await (opts.browser
-    ? require('./exec-benchmark.browser.js')
-    : require('./exec-benchmark.node.js')
+    ? await import('./exec-benchmark.browser.js')
+    : await import('./exec-benchmark.node.js')
   )({ ...opts, basename, hook: info })
 
   if (stopHook) await stopHook()

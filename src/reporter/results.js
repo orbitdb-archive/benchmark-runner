@@ -1,5 +1,4 @@
-'use strict'
-module.exports = ({ results }) => {
+export default ({ results }) => {
   const code =
 `export default ${JSON.stringify(results)}
 `

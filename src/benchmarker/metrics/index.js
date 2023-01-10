@@ -1,5 +1,4 @@
-'use strict'
-const isNode = require('is-node')
+import isNode from 'is-node'
 const useMetricState = (state, get) => () => {
   const { newState, next } = get(state)
   state = newState
@@ -62,7 +61,7 @@ const memoryTotalMetric = {
   get: () => toMegabytes(memorySample().total)
 }
 
-module.exports = {
+export {
   useMetricState,
   timeMetric,
   cpuUsageMetric,

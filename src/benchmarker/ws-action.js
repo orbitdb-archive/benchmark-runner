@@ -1,5 +1,3 @@
-'use strict'
-
 const action = {}
 
 action.types = {
@@ -19,4 +17,4 @@ action.withInfo = (info) => (action) => ({ info, ...action })
 
 action.parse = (action) => JSON.parse(action)
 
-module.exports = action
+export default action

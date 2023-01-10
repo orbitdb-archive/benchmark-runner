@@ -2,12 +2,15 @@
   "name": "orbit-db-benchmark-runner",
   "version": "2.0.1",
   "description": "OrbitDB Benchmark Runner",
+  "type": "module",
   "main": "./src/index.js",
   "bin": {
     "benchmarker": "./src/cli.js"
   },
   "scripts": {
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "lint": "standard --env=mocha",
+    "lint:fix": "standard --env=mocha --fix"
   },
   "author": "mistakia",
   "license": "MIT",

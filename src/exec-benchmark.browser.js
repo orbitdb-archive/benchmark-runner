@@ -1,9 +1,8 @@
-'use strict'
-const path = require('path')
-const puppeteer = require('puppeteer')
-const webpackServer = require('./webpack-server')
+import path from 'path'
+import puppeteer from 'puppeteer'
+import webpackServer from './webpack-server.js'
 
-module.exports = async function (opts) {
+export default async function (opts) {
   const webpackPort = await webpackServer(opts).catch(console.error)
   const browser = await puppeteer.launch({
     args: ['--enable-precise-memory-info'],

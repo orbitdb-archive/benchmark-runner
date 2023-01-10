@@ -1,2 +1,1 @@
-'use strict'
-module.exports = require('./run')
+export { default } from './run.js'

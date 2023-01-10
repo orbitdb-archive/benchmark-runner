@@ -1,4 +1,3 @@
-'use strict'
 const benchmarks = results => Object.keys(results)
 const envs = results => benchmark => Object.keys(results[benchmark])
 const getMetric = result => metric => {
@@ -6,7 +5,7 @@ const getMetric = result => metric => {
   return result.recorded.map(x => x[metricIndex])
 }
 
-module.exports = {
+export {
   benchmarks,
   envs,
   getMetric

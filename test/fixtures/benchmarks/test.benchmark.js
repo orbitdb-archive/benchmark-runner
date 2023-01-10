@@ -1,5 +1,4 @@
-'use strict'
-module.exports = {
+export default {
   benchmark: async function (benchmarker) {
     // a time metric is automatically recorded
 

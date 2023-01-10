@@ -1,12 +1,11 @@
-'use strict'
-const WebSocket = require('ws')
-const { parse, types } = require('./ws-action')
+import WebSocket from 'ws'
+import WsAction from './ws-action.js'
 const logMessage = (id, msg) =>
 `benchmark id:${id}
 ${msg}
 `
 
-class BenchmarkerServer {
+export default class BenchmarkerServer {
   constructor ({ port } = {}) {
     this._wss = new WebSocket.Server({ port: port || 0 })
     this._wss.on('connection', this._handleWsConnection.bind(this))
@@ -18,12 +17,12 @@ class BenchmarkerServer {
 
   async _handleWsConnection (ws) {
     ws.on('message', m => {
-      const { info, type, msg } = parse(m)
+      const { info, type, msg } = WsAction.parse(m)
       switch (type) {
-        case types.LOG:
+        case WsAction.types.LOG:
           console.log(logMessage(info.id, msg))
           break
-        case types.SEGMENT: {
+        case WsAction.types.SEGMENT: {
           const { name, env } = info
           if (!this.results[name]) this.results[name] = {}
           if (!this.results[name][env]) this.results[name][env] = info
@@ -35,5 +34,3 @@ class BenchmarkerServer {
     })
   }
 }
-
-module.exports = BenchmarkerServer

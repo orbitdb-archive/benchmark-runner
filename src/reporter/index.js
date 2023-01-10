@@ -1,14 +1,18 @@
-'use strict'
-const path = require('path')
-const fs = require('fs').promises
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const InlineAssetsHtmlPlugin = require('inline-assets-html-plugin')
-const webpackEntry = path.join(__dirname, 'App.js')
-const processResults = require('./process-results.js')
-const { benchmarks, envs } = require('./util')
+import path from 'path'
+import { promises as fs } from 'fs'
+import webpack from 'webpack'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import InlineAssetsHtmlPlugin from 'inline-assets-html-plugin'
+import processResults from './process-results.js'
+import { benchmarks, envs } from './util.js'
+import { fileURLToPath } from 'url'
 
-module.exports = async function (output, results, baselines) {
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const webpackEntry = path.join(__dirname, 'App.js')
+
+export default async function (output, results, baselines) {
   if (baselines) baselines = require(baselines)
   processResults(results, baselines)
 

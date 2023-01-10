@@ -1,10 +1,15 @@
-'use strict'
-const path = require('path')
-const runSource = require('fs').readFileSync(path.join(__dirname, 'run.js'))
+import path from 'path'
+import fs from 'fs'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const runSource = fs.readFileSync(path.join(__dirname, 'run.js'))
 const comment = '// '
 const indent = '  '
 
-module.exports = function ({ file, host, basename, dir, hook }) {
+export default function ({ file, host, basename, dir, hook }) {
   const lines = runSource.toString().split('\n')
   const browserImportIndex = lines.indexOf('// browser import') + 1
   const nodeImportIndex = lines.indexOf(indent + '// node import') + 1

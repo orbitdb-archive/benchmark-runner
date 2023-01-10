@@ -1,13 +1,18 @@
 #!/usr/bin/env node
-const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const middleware = require('webpack-dev-middleware')
-const express = require('express')
+import path from 'path'
+import webpack from 'webpack'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import middleware from 'webpack-dev-middleware'
+import express from 'express'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const webpackEntry = path.join(__dirname, 'webpack-entry.js')
 const webpackPort = 8000
 
-module.exports = async function (options) {
+export default async function (options) {
   const compiler = webpack({
     mode: 'production',
     entry: webpackEntry,

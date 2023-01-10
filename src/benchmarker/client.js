@@ -1,16 +1,18 @@
-'use strict'
-const isNode = require('is-node')
-const nodeDir = (dir) => require('path').join(dir, 'node')
-const getWebSocket = () => isNode
-  ? require('ws')
-  : window.WebSocket
-const { makeId, withInfo, creators } = require('./ws-action')
-const {
+import isNode from 'is-node'
+import path from 'path'
+import ws from 'ws'
+import WsAction{ makeId, withInfo, creators } from './ws-action.js'
+import {
   timeMetric,
   cpuUsageMetric,
   memoryUsedMetric,
   memoryTotalMetric
-} = require('./metrics')
+} from './metrics/index.js'
+
+const nodeDir = (dir) => path.join(dir, 'node')
+const getWebSocket = () => isNode
+  ? ws
+  : window.WebSocket
 
 class Benchmarker {
   constructor (ws, dir) {
@@ -19,7 +21,7 @@ class Benchmarker {
     this._timeout = null
 
     this.isNode = isNode
-    this.id = makeId()
+    this.id = WsAction.makeId()
     this.info = {
       id: this.id,
       name: `benchmark-${this.id}`,
@@ -88,15 +90,15 @@ class Benchmarker {
   }
 
   log (msg) {
-    this._sendAction(creators.LOG(msg))
+    this._sendAction(WsAction.creators.LOG(msg))
   }
 
   _sendAction (action) {
-    this._ws.send(JSON.stringify(withInfo(this.info)(action)))
+    this._ws.send(JSON.stringify(WsAction.withInfo(this.info)(action)))
   }
 
   _recordMetrics () {
-    this._sendAction(creators.SEGMENT(this.metrics.map(({ get }) => get())))
+    this._sendAction(WsAction.creators.SEGMENT(this.metrics.map(({ get }) => get())))
   }
 
   startRecording () {
