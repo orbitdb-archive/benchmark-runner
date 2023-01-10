@@ -27,7 +27,7 @@ const handleSubprocess = (cmd, options = execOptions, cb = execCallback) =>
 describe('benchmarker cli', function () {
   this.timeout(30000)
 
-  it.only('default options', async function () {
+  it('default options', async function () {
     await assert.doesNotReject(() =>
       handleSubprocess(`node ${cli}`)
     )

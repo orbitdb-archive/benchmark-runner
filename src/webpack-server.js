@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const webpackEntry = path.join(__dirname, 'webpack-entry.js')
-const webpackPort = 8000
+const webpackPort = 8005
 
 export default async function (options) {
   const compiler = webpack({

@@ -1,7 +1,7 @@
 import isNode from 'is-node'
 import path from 'path'
 import ws from 'ws'
-import WsAction{ makeId, withInfo, creators } from './ws-action.js'
+import WsAction from './ws-action.js'
 import {
   timeMetric,
   cpuUsageMetric,
@@ -14,7 +14,7 @@ const getWebSocket = () => isNode
   ? ws
   : window.WebSocket
 
-class Benchmarker {
+export default class Benchmarker {
   constructor (ws, dir) {
     this._ws = ws
     this.dir = isNode ? nodeDir(dir) : dir
@@ -118,5 +118,3 @@ class Benchmarker {
     this._recordMetrics()
   }
 }
-
-module.exports = Benchmarker

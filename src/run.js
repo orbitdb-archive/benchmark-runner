@@ -1,10 +1,10 @@
 import BenchmarkerClient from './benchmarker/client.js'
+import { benchmark } from file
 // browser import
 // const { benchmark } = require(%)
 
 export default async function ({ host, file, basename, dir, hook }) {
   // node import
-  const { benchmark } = require(file)
   const benchmarker = await BenchmarkerClient.create(host, dir)
   benchmarker.setBenchmarkName(basename)
   if (hook) benchmarker.setHookInfo(hook)
